@@ -5,8 +5,9 @@
 //  Created by Алексей Поддубный on 03.02.2026.
 //
 import Foundation
+import Combine
 
-struct Post: Codable {
+struct Post: Codable, Identifiable, Equatable {
     let id: Int
     let title: String
     let content: String
@@ -24,17 +25,16 @@ struct Post: Codable {
     }
 }
 
-struct PaginatedPosts: Codable {
+struct PostsResponse: Codable, Equatable {
     let posts: [Post]
-    let nextCursor: String
-    let prevCursor: String
-    let hasBool: Bool
+    let nextCursor: String?
+    let prevCursor: String?
+    let hasMore: Bool
     
     private enum CodingKeys: String, CodingKey {
         case posts = "posts"
         case nextCursor = "next_cursor"
         case prevCursor = "prev_cursor"
-        case hasBool = "has_bool"
+        case hasMore = "has_more"
     }
 }
-

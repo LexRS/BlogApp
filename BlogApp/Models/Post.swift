@@ -7,7 +7,7 @@
 import Foundation
 import Combine
 
-struct Post: Codable, Identifiable {
+struct Post: Codable, Identifiable, Equatable {
     let id: Int
     let title: String
     let content: String
@@ -25,29 +25,16 @@ struct Post: Codable, Identifiable {
     }
 }
 
-struct PaginatedPosts: Codable {
+struct PostsResponse: Codable, Equatable {
     let posts: [Post]
-    let nextCursor: String
-    let prevCursor: String
-    let hasBool: Bool
+    let nextCursor: String?
+    let prevCursor: String?
+    let hasMore: Bool
     
     private enum CodingKeys: String, CodingKey {
         case posts = "posts"
         case nextCursor = "next_cursor"
         case prevCursor = "prev_cursor"
-        case hasBool = "has_bool"
+        case hasMore = "has_more"
     }
 }
-
-class PostsModel: ObservableObject {
-    @Published var posts: [Post] = []
-}
-
-extension Post {
-    static var MOCK_POSTS = [
-        Post(id: 1, title: "Simple post", content: "This post is about nature", author: "Bob Stringer", createdAt: Date.now, updatedAt: Date.now),
-        Post(id: 2, title: "Swift tutorial", content: "How to start coding with Swift", author: "John Appleseed", createdAt: Date.now, updatedAt: Date.now),
-        Post(id: 3, title: "Learning go", content: "Your best point to start learning GO", author: "Sandra Wolfstein", createdAt: Date.now, updatedAt: Date.now)
-    ]
-}
-

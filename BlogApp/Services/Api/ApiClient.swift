@@ -8,16 +8,21 @@
 import Foundation
 
 struct ApiClient {
-    var fetchPosts: @Sendable (_ cursor: String) async throws -> [Post]
+    var fetchPosts: @Sendable (_ cursor: String?) async throws -> PostsResponse
     
     static let live = Self(fetchPosts: { cursor in
-        let urlString = baseURL + "/posts"
-        guard let url = URL(string: urlString) else { throw ApiError.invalidURL }
+        var urlComponents = URLComponents(string: baseURL + "/posts/paginated")
+        if let cursor {
+            urlComponents?.queryItems = [URLQueryItem(name: "cursor", value: cursor)]
+        }
+        guard let url = urlComponents?.url else { throw ApiError.invalidURL }
+        print(url.absoluteString)
         
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        let response = try decoder.decode([Post].self, from: data)
+        let response = try decoder.decode(PostsResponse.self, from: data)
+        print(response)
         return response
     })
 }

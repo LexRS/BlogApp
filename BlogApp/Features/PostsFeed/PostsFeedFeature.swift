@@ -49,7 +49,6 @@ struct PostsFeedFeature {
                         await send(.postsResponse(.failure(.networkError(error.localizedDescription))))
                     }
                 }
-                
             case let .postsResponse(.success(response)):
                 state.isLoading = false
                 state.isLoadingMore = false
@@ -57,13 +56,11 @@ struct PostsFeedFeature {
                 state.nextCursor = response.nextCursor
                 state.hasMore = response.hasMore
                 return .none
-                
             case let .postsResponse(.failure(error)):
                 state.isLoading = false
                 state.isLoadingMore = false
                 state.errorMessage = error.localizedDescription
                 return .none
-                
             case .dismissError:
                 state.errorMessage = nil
                 return .none

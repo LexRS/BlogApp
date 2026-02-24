@@ -22,7 +22,6 @@ struct ApiClient {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let response = try decoder.decode(PostsResponse.self, from: data)
-        print(response)
         return response
     })
 }

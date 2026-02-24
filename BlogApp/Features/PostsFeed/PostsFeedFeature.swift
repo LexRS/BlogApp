@@ -5,6 +5,7 @@ import ComposableArchitecture
 @Reducer
 struct PostsFeedFeature {
     @Dependency(\.apiClient) var apiClient
+    @Dependency(\.dismiss) var dismiss
     
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -64,7 +65,35 @@ struct PostsFeedFeature {
             case .dismissError:
                 state.errorMessage = nil
                 return .none
+                
+                // Navigation actions
+            case .addButtonTapped:
+                state.newPost = AddPostFeature.State()
+                return .none
+                
+            case .newPostSheetDismissed:
+                state.newPost = nil
+                return .none
+                
+            case .newPost(.presented(.saveResponse(.success))):
+                // Refresh posts after successful creation
+                state.newPost = nil
+                return .send(.fetchPosts)
+                
+            case .newPost(.presented(.saveResponse(.failure))):
+                // Handle error if needed
+                return .none
+                
+            case .newPost(.dismiss):
+                state.newPost = nil
+                return .none
+                
+            case .newPost:
+                return .none
             }
+        }
+        .ifLet(\.$newPost, action: \.newPost) {
+            AddPostFeature()
         }
     }
 }
@@ -80,6 +109,9 @@ extension PostsFeedFeature {
         var nextCursor: String?
         var hasMore = true
         
+        var showNewPostSheet = false
+        @Presents var newPost: AddPostFeature.State?
+        
         var showErrorAlert: Bool {
             errorMessage != nil
         }
@@ -88,11 +120,17 @@ extension PostsFeedFeature {
 
 // MARK: - Action
 extension PostsFeedFeature {
+    @CasePathable
     enum Action: Equatable {
         case onAppear
         case fetchPosts
         case fetchMorePosts
         case postsResponse(Result<PostsResponse, ApiError>)
         case dismissError
+        
+        // Navigation actions
+        case addButtonTapped
+        case newPostSheetDismissed
+        case newPost(PresentationAction<AddPostFeature.Action>)
     }
 }

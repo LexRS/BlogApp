@@ -8,71 +8,131 @@
 import SwiftUI
 import ComposableArchitecture
 
+// Create an Equatable struct for observed state
+struct PostsFeedViewState: Equatable {
+    let posts: IdentifiedArrayOf<Post>
+    let isLoading: Bool
+    let isLoadingMore: Bool
+    let hasMore: Bool
+}
+
 struct PostsFeedView: View {
-    let store: StoreOf<PostsFeedFeature>
+    @Bindable var store: StoreOf<PostsFeedFeature>
     
     var body: some View {
         NavigationStack {
-            WithViewStore(store, observe: { $0 }) { viewStore in
-                ZStack {
-                    if viewStore.isLoading && viewStore.posts.isEmpty {
-                        ProgressView()
-                    } else {
-                        List {
-                            ForEach(viewStore.posts) { post in
-                                PostRow(post: post)
-                                    .onAppear {
-                                        if post.id == viewStore.posts.last?.id && viewStore.hasMore {
-                                            viewStore.send(.fetchMorePosts)
-                                        }
-                                    }
-                            }
-                            
-                            if viewStore.isLoadingMore {
-                                HStack {
-                                    Spacer()
-                                    ProgressView()
-                                        .padding()
-                                    Spacer()
-                                }
-                            }
-                        }
-                        .listStyle(.plain)
-                        .refreshable {
-                            await viewStore.send(.fetchPosts).finish()
-                        }
-                    }
+            ZStack(alignment: .bottomTrailing) {
+                postsList
+                floatingButton
+            }
+            .navigationTitle("Blog Posts")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    refreshButton
                 }
-                .navigationTitle("Blog Posts")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            viewStore.send(.fetchPosts)
-                        }) {
-                            Image(systemName: "arrow.clockwise")
-                        }
-                        .disabled(viewStore.isLoading)
-                    }
+            }
+            .onAppear {
+                store.send(.onAppear)
+            }
+            .sheet(item: $store.scope(state: \.newPost, action: \.newPost)) { newPostStore in
+                AddPostView(store: newPostStore)
+            }
+            .alert(
+                "Error",
+                isPresented: Binding(
+                    get: { store.errorMessage != nil },
+                    set: { if !$0 { store.send(.dismissError) } }
+                )
+            ) {
+                Button("OK") {
+                    store.send(.dismissError)
                 }
-                .onAppear {
-                    viewStore.send(.onAppear)
+            } message: {
+                if let error = store.errorMessage {
+                    Text(error)
                 }
-                .alert(
-                    "Error",
-                    isPresented: viewStore.binding(
-                        get: \.showErrorAlert,
-                        send: .dismissError
-                    )
-                ) {
-                    Button("OK") {
-                        viewStore.send(.dismissError)
+            }
+        }
+    }
+    
+    // MARK: - Subviews
+    
+    @ViewBuilder
+    private var postsList: some View {
+        WithViewStore(store, observe: { state in
+            PostsFeedViewState(
+                            posts: state.posts,
+                            isLoading: state.isLoading,
+                            isLoadingMore: state.isLoadingMore,
+                            hasMore: state.hasMore
+                        )
+        }) { viewStore in
+            ZStack {
+                if viewStore.isLoading && viewStore.posts.isEmpty {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    List {
+                        postsSection(for: viewStore)
+                        loadingMoreSection(for: viewStore)
                     }
-                } message: {
-                    if let error = viewStore.errorMessage {
-                        Text(error)
+                    .listStyle(.plain)
+                    .refreshable {
+                        await store.send(.fetchPosts).finish()
                     }
                 }
             }
         }
     }
+    
+    @ViewBuilder
+    private func postsSection(for viewStore: PostsFeedViewStore) -> some View {
+        ForEach(viewStore.posts) { post in
+            PostRow(post: post)
+                .onAppear {
+                    if post.id == viewStore.posts.last?.id && viewStore.hasMore {
+                        store.send(.fetchMorePosts)
+                    }
+                }
+        }
+    }
+    
+    @ViewBuilder
+    private func loadingMoreSection(for viewStore: PostsFeedViewStore) -> some View {
+        if viewStore.isLoadingMore {
+            HStack {
+                Spacer()
+                ProgressView()
+                    .padding()
+                Spacer()
+            }
+        }
+    }
+    
+    private var floatingButton: some View {
+        Button {
+            store.send(.addButtonTapped)
+        } label: {
+            Image(systemName: "plus")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+                .frame(width: 56, height: 56)
+                .background(Color.blue)
+                .clipShape(Circle())
+                .shadow(radius: 4, y: 2)
+        }
+        .padding(.trailing, 20)
+        .padding(.bottom, 20)
+    }
+    
+    private var refreshButton: some View {
+        Button(action: { store.send(.fetchPosts) }) {
+            Image(systemName: "arrow.clockwise")
+        }
+        .disabled(store.isLoading)
+    }
 }
+
+// Typealias to make the code cleaner
+typealias PostsFeedViewStore = ViewStore<PostsFeedViewState, PostsFeedFeature.Action>

@@ -22,8 +22,12 @@ struct PostsFeedView: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
-                postsList
-                floatingButton
+                if store.posts.isEmpty {
+                    NodataView()
+                } else {
+                    postsList
+                    floatingButton
+                }
             }
             .navigationTitle("Blog Posts")
             .toolbar {
@@ -78,7 +82,7 @@ struct PostsFeedView: View {
                     }
                     .listStyle(.plain)
                     .refreshable {
-                        await store.send(.fetchPosts).finish()
+                        store.send(.fetchPosts)
                     }
                 }
             }

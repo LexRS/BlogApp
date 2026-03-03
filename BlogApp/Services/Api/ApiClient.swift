@@ -10,6 +10,7 @@ import Foundation
 struct ApiClient {
     var fetchPosts: @Sendable (_ cursor: String?) async throws -> PostsResponse
     var createPost: @Sendable (_ post: CreatePostRequest) async throws -> Post
+    var fetchPost: @Sendable (_ postID: Int) async throws -> Post
     
     static let live = Self(
         fetchPosts: { cursor in
@@ -18,7 +19,6 @@ struct ApiClient {
                 urlComponents?.queryItems = [URLQueryItem(name: "cursor", value: cursor)]
             }
             guard let url = urlComponents?.url else { throw ApiError.invalidURL }
-            print(url.absoluteString)
             
             let (data, _) = try await URLSession.shared.data(from: url)
             let decoder = JSONDecoder()
@@ -47,8 +47,19 @@ struct ApiClient {
             
             let response = try decoder.decode(Post.self, from: data)
             return response
+        },
+        fetchPost: { postID in
+            guard let url = URL(string: baseURL + "/posts/\(postID)") else {
+                throw ApiError.invalidURL
+            }
+            
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let response = try decoder.decode(Post.self, from: data)
+            return response
         }
-    )
+        )
 }
 
 extension ApiClient {

@@ -41,6 +41,9 @@ struct PostsFeedView: View {
             .sheet(item: $store.scope(state: \.newPost, action: \.newPost)) { newPostStore in
                 AddPostView(store: newPostStore)
             }
+            .navigationDestination(item: $store.scope(state: \.postDetailed, action: \.postDetailed), destination: { detailPostStore in
+                DetailedPostView(store: detailPostStore)
+            })
             .alert(
                 "Error",
                 isPresented: Binding(
@@ -93,6 +96,9 @@ struct PostsFeedView: View {
     private func postsSection(for viewStore: PostsFeedViewStore) -> some View {
         ForEach(viewStore.posts) { post in
             PostRow(post: post)
+                .onTapGesture {
+                    store.send(.postFromListSelected(post))
+                }
                 .onAppear {
                     if post.id == viewStore.posts.last?.id && viewStore.hasMore {
                         store.send(.fetchMorePosts)

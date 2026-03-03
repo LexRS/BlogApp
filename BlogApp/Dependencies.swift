@@ -30,6 +30,16 @@ extension ApiClient: DependencyKey {
                 createdAt: Date(),
                 updatedAt: Date()
             )
+        },
+        fetchPost: { postID in
+            Post(
+                id: postID,
+                title: "post.title",
+                content: "post.content",
+                author: "post.author",
+                createdAt: Date(),
+                updatedAt: Date()
+            )
         }
     )
 }

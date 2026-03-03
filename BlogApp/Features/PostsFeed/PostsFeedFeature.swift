@@ -66,7 +66,7 @@ struct PostsFeedFeature {
                 state.errorMessage = nil
                 return .none
                 
-                // Navigation actions
+                // Navigation actions for new post creation
             case .addButtonTapped:
                 state.newPost = AddPostFeature.State()
                 return .none
@@ -90,10 +90,20 @@ struct PostsFeedFeature {
                 
             case .newPost:
                 return .none
+                
+                // Navigation actions for post details view
+            case .postFromListSelected(let post):
+                state.postDetailed = DetailedPostFeature.State(postID: post.id)
+                return .none
+            case .postDetailed:
+                return .none
             }
         }
         .ifLet(\.$newPost, action: \.newPost) {
             AddPostFeature()
+        }
+        .ifLet(\.$postDetailed, action: \.postDetailed) {
+            DetailedPostFeature()
         }
     }
 }
@@ -111,7 +121,8 @@ extension PostsFeedFeature {
         
         var showNewPostSheet = false
         @Presents var newPost: AddPostFeature.State?
-        
+        @Presents var postDetailed: DetailedPostFeature.State?
+                
         var showErrorAlert: Bool {
             errorMessage != nil
         }
@@ -128,9 +139,13 @@ extension PostsFeedFeature {
         case postsResponse(Result<PostsResponse, ApiError>)
         case dismissError
         
-        // Navigation actions
+        // Navigating actions for new post creation
         case addButtonTapped
         case newPostSheetDismissed
         case newPost(PresentationAction<AddPostFeature.Action>)
+        
+        // Navigating actions for post details view
+        case postFromListSelected(Post)
+        case postDetailed(PresentationAction<DetailedPostFeature.Action>)
     }
 }

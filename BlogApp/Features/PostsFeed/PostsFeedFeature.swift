@@ -5,6 +5,7 @@ import ComposableArchitecture
 @Reducer
 struct PostsFeedFeature {
     @Dependency(\.apiClient) var apiClient
+    @Dependency(\.dismiss) var dismiss
     
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -49,7 +50,6 @@ struct PostsFeedFeature {
                         await send(.postsResponse(.failure(.networkError(error.localizedDescription))))
                     }
                 }
-                
             case let .postsResponse(.success(response)):
                 state.isLoading = false
                 state.isLoadingMore = false
@@ -57,17 +57,53 @@ struct PostsFeedFeature {
                 state.nextCursor = response.nextCursor
                 state.hasMore = response.hasMore
                 return .none
-                
             case let .postsResponse(.failure(error)):
                 state.isLoading = false
                 state.isLoadingMore = false
                 state.errorMessage = error.localizedDescription
                 return .none
-                
             case .dismissError:
                 state.errorMessage = nil
                 return .none
+                
+                // Navigation actions for new post creation
+            case .addButtonTapped:
+                state.newPost = AddPostFeature.State()
+                return .none
+                
+            case .newPostSheetDismissed:
+                state.newPost = nil
+                return .none
+                
+            case .newPost(.presented(.saveResponse(.success))):
+                // Refresh posts after successful creation
+                state.newPost = nil
+                return .send(.fetchPosts)
+                
+            case .newPost(.presented(.saveResponse(.failure))):
+                // Handle error if needed
+                return .none
+                
+            case .newPost(.dismiss):
+                state.newPost = nil
+                return .none
+                
+            case .newPost:
+                return .none
+                
+                // Navigation actions for post details view
+            case .postFromListSelected(let post):
+                state.postDetailed = DetailedPostFeature.State(postID: post.id)
+                return .none
+            case .postDetailed:
+                return .none
             }
+        }
+        .ifLet(\.$newPost, action: \.newPost) {
+            AddPostFeature()
+        }
+        .ifLet(\.$postDetailed, action: \.postDetailed) {
+            DetailedPostFeature()
         }
     }
 }
@@ -83,6 +119,10 @@ extension PostsFeedFeature {
         var nextCursor: String?
         var hasMore = true
         
+        var showNewPostSheet = false
+        @Presents var newPost: AddPostFeature.State?
+        @Presents var postDetailed: DetailedPostFeature.State?
+                
         var showErrorAlert: Bool {
             errorMessage != nil
         }
@@ -91,11 +131,21 @@ extension PostsFeedFeature {
 
 // MARK: - Action
 extension PostsFeedFeature {
+    @CasePathable
     enum Action: Equatable {
         case onAppear
         case fetchPosts
         case fetchMorePosts
         case postsResponse(Result<PostsResponse, ApiError>)
         case dismissError
+        
+        // Navigating actions for new post creation
+        case addButtonTapped
+        case newPostSheetDismissed
+        case newPost(PresentationAction<AddPostFeature.Action>)
+        
+        // Navigating actions for post details view
+        case postFromListSelected(Post)
+        case postDetailed(PresentationAction<DetailedPostFeature.Action>)
     }
 }

@@ -16,7 +16,7 @@ struct AddPostView: View {
             Form {
                 Section("Post Details") {
                     TextField("Title", text: $store.title)
-                        .textInputAutocapitalization(.words)
+                        .textInputAutocapitalization(.sentences)
                     
                     TextField("Author", text: $store.author)
                         .textInputAutocapitalization(.words)

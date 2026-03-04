@@ -42,9 +42,7 @@ struct ApiClient {
             let (data, _) = try await URLSession.shared.data(for: request)
             
             let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            
+            decoder.dateDecodingStrategy = .iso8601            
             let response = try decoder.decode(Post.self, from: data)
             return response
         },

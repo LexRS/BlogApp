@@ -1,0 +1,16 @@
+//
+//  Debug.xcconfig
+//  BlogApp
+//
+//  Created by Алексей Поддубный on 06.03.2026.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+#include "Base.xcconfig"
+
+API_BASE_URL = localhost:8080/api/v1
+API_BASE_URL_SCHEME = http
+
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG

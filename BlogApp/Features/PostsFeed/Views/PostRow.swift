@@ -27,7 +27,7 @@ struct PostRow: View {
                     .foregroundColor(.secondary)
                 
                 Spacer()
-                Text(post.createdAt, format: Date.FormatStyle(date: .abbreviated, time: .shortened).attributedStyle)
+                Text(post.createdAt, format: Date.FormatStyle(date: .abbreviated, time: .shortened))
                     .font(.caption2)
                     .foregroundColor(.secondary)
                     .padding(.leading, 4)

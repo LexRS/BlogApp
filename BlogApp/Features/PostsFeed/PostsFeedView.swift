@@ -17,46 +17,48 @@ struct PostsFeedViewState: Equatable {
 }
 
 struct PostsFeedView: View {
-    @Bindable var store: StoreOf<PostsFeedFeature>
+    @Perception.Bindable var store: StoreOf<PostsFeedFeature>
     
     var body: some View {
-        NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
-                if store.posts.isEmpty {
-                    NodataView()
-                } else {
-                    postsList
-                    floatingButton
+        WithPerceptionTracking {
+            NavigationStack {
+                ZStack(alignment: .bottomTrailing) {
+                    if store.posts.isEmpty {
+                        NodataView()
+                    } else {
+                        postsList
+                        floatingButton
+                    }
                 }
-            }
-            .navigationTitle("Blog Posts")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    refreshButton
+                .navigationTitle("Blog Posts")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        refreshButton
+                    }
                 }
-            }
-            .onAppear {
-                store.send(.onAppear)
-            }
-            .sheet(item: $store.scope(state: \.newPost, action: \.newPost)) { newPostStore in
-                AddPostView(store: newPostStore)
-            }
-            .navigationDestination(item: $store.scope(state: \.postDetailed, action: \.postDetailed), destination: { detailPostStore in
-                DetailedPostView(store: detailPostStore)
-            })
-            .alert(
-                "Error",
-                isPresented: Binding(
-                    get: { store.errorMessage != nil },
-                    set: { if !$0 { store.send(.dismissError) } }
-                )
-            ) {
-                Button("OK") {
-                    store.send(.dismissError)
+                .onAppear {
+                    store.send(.onAppear)
                 }
-            } message: {
-                if let error = store.errorMessage {
-                    Text(error)
+                .sheet(item: $store.scope(state: \.newPost, action: \.newPost)) { newPostStore in
+                    AddPostView(store: newPostStore)
+                }
+                .navigationDestination(item: $store.scope(state: \.postDetailed, action: \.postDetailed), destination: { detailPostStore in
+                    DetailedPostView(store: detailPostStore)
+                })
+                .alert(
+                    "Error",
+                    isPresented: Binding(
+                        get: { store.errorMessage != nil },
+                        set: { if !$0 { store.send(.dismissError) } }
+                    )
+                ) {
+                    Button("OK") {
+                        store.send(.dismissError)
+                    }
+                } message: {
+                    if let error = store.errorMessage {
+                        Text(error)
+                    }
                 }
             }
         }
@@ -146,3 +148,14 @@ struct PostsFeedView: View {
 
 // Typealias to make the code cleaner
 typealias PostsFeedViewStore = ViewStore<PostsFeedViewState, PostsFeedFeature.Action>
+
+//#Preview {
+//    PostsFeedView(
+//        store: Store(initialState: PostsFeedFeature.State()) {
+//            PostsFeedFeature()
+//        } withDependencies: {
+//            // Override with preview value
+//            $0.postsClient = MockPostsClient()
+//        }
+//    )
+//}

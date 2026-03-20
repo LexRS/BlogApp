@@ -7,53 +7,56 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Perception
 
 struct AddPostView: View {
-    @Bindable var store: StoreOf<AddPostFeature>
+    @Perception.Bindable var store: StoreOf<AddPostFeature>
     
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Post Details") {
-                    TextField("Title", text: $store.title)
-                        .textInputAutocapitalization(.sentences)
+        WithPerceptionTracking {
+            NavigationStack {
+                Form {
+                    Section("Post Details") {
+                        TextField("Title", text: $store.title)
+                            .textInputAutocapitalization(.sentences)
+                        
+                        TextField("Author", text: $store.author)
+                            .textInputAutocapitalization(.words)
+                        
+                        TextField("Content", text: $store.content, axis: .vertical)
+                            .lineLimit(5...10)
+                    }
                     
-                    TextField("Author", text: $store.author)
-                        .textInputAutocapitalization(.words)
+                    if let error = store.errorMessage {
+                        Section {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.caption)
+                        }
+                    }
+                }
+                .navigationTitle("New Post")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            store.send(.cancelButtonTapped)
+                        }
+                    }
                     
-                    TextField("Content", text: $store.content, axis: .vertical)
-                        .lineLimit(5...10)
-                }
-                
-                if let error = store.errorMessage {
-                    Section {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .font(.caption)
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            store.send(.saveButtonTapped)
+                        }
+                        .disabled(!store.isValid || store.isSaving)
                     }
                 }
-            }
-            .navigationTitle("New Post")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        store.send(.cancelButtonTapped)
+                .overlay {
+                    if store.isSaving {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(Color.black.opacity(0.1))
                     }
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        store.send(.saveButtonTapped)
-                    }
-                    .disabled(!store.isValid || store.isSaving)
-                }
-            }
-            .overlay {
-                if store.isSaving {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.black.opacity(0.1))
                 }
             }
         }

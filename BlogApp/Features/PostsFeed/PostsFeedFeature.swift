@@ -4,7 +4,7 @@ import ComposableArchitecture
 
 @Reducer
 struct PostsFeedFeature {
-    @Dependency(\.apiClient) var apiClient
+    @Dependency(\.apiPostsProvider) var apiProvider
     @Dependency(\.dismiss) var dismiss
     
     var body: some Reducer<State, Action> {
@@ -24,12 +24,11 @@ struct PostsFeedFeature {
                 
                 return .run { send in
                     do {
-                        let response = try await apiClient.fetchPosts(nil)
+                        let response = try await apiProvider.getPosts(cursor: nil)
                         await send(.postsResponse(.success(response)))
                     } catch let error as ApiError {
                         await send(.postsResponse(.failure(error)))
                     } catch {
-                        // Handle unexpected errors
                         await send(.postsResponse(.failure(.networkError(error.localizedDescription))))
                     }
                 }
@@ -42,7 +41,7 @@ struct PostsFeedFeature {
                 
                 return .run { [cursor = state.nextCursor] send in
                     do {
-                        let response = try await apiClient.fetchPosts(cursor)
+                        let response = try await apiProvider.getPosts(cursor: cursor)
                         await send(.postsResponse(.success(response)))
                     } catch let error as ApiError {
                         await send(.postsResponse(.failure(error)))

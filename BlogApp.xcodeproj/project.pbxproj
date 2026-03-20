@@ -14,9 +14,22 @@
 		4BF4CBFD2F3247AB00D2F26B /* BlogApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlogApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4BC753BE2F5B239A005ED88E /* Exceptions for "BlogApp" folder in "BlogApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4BF4CBFC2F3247AB00D2F26B /* BlogApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4BF4CBFF2F3247AB00D2F26B /* BlogApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4BC753BE2F5B239A005ED88E /* Exceptions for "BlogApp" folder in "BlogApp" target */,
+			);
 			path = BlogApp;
 			sourceTree = "<group>";
 		};
@@ -257,6 +270,8 @@
 		};
 		4BF4CC092F3247AD00D2F26B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 4BF4CBFF2F3247AB00D2F26B /* BlogApp */;
+			baseConfigurationReferenceRelativePath = Networking/Config/Debug.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -265,6 +280,7 @@
 				DEVELOPMENT_TEAM = 9ZFC28246W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BlogApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -289,6 +305,8 @@
 		};
 		4BF4CC0A2F3247AD00D2F26B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 4BF4CBFF2F3247AB00D2F26B /* BlogApp */;
+			baseConfigurationReferenceRelativePath = Networking/Config/Prod.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -297,6 +315,7 @@
 				DEVELOPMENT_TEAM = 9ZFC28246W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BlogApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

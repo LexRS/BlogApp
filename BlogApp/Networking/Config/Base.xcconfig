@@ -1,0 +1,13 @@
+//
+//  Base.xcconfig
+//  BlogApp
+//
+//  Created by Алексей Поддубный on 06.03.2026.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+PRODUCT_NAME = BlogApp
+SWIFT_VERSION = 5.0
+IPHONEOS_DEPLOYMENT_TARGET = 16.0

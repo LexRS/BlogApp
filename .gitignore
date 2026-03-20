@@ -1,0 +1,55 @@
+# Xcode
+#
+# Рекомендуется не отслеживать личные настройки и временные файлы сборки.
+build/
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.itunesbackup
+*.xcuserdatad
+
+# Рекомендуется для тех, кто использует схемы
+*.xcscheme
+!default.xcscheme
+
+# Apple Swift Package Manager
+#
+# Игнорируем рабочую директорию SPM
+.build/
+.swiftpm/
+
+# CocoaPods
+#
+# Игнорируем сами поды, если вы не хотите хранить их код в репозитории (обычно так и делают)
+Pods/
+*.xcworkspace
+
+# Carthage
+#
+# Игнорируем сборки Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+# Fastlane
+#
+# Игнорируем логи и временные файлы Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Системные файлы macOS
+.DS_Store
+*.swp
+*.lock
+*.xcbkptlist

@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 @Reducer
 struct AddPostFeature {
-    @Dependency(\.apiClient) var apiClient
+    @Dependency(\.addPostService) var networkService
     @Dependency(\.dismiss) var dismiss
     
     var body: some Reducer<State, Action> {
@@ -35,7 +35,7 @@ struct AddPostFeature {
                 
                 return .run { send in
                     do {
-                        let newPost = try await apiClient.createPost(post)
+                        let newPost = try await networkService.createPost(post)
                         await send(.saveResponse(.success(newPost)))
                     } catch let error as ApiError {
                         await send(.saveResponse(.failure(error)))

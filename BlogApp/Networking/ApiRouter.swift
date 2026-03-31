@@ -21,6 +21,23 @@ enum HttpMethod: String {
     case DELETE
 }
 
+extension ApiRouter {
+    func encodeToJSON<T: Encodable>(_ value: T) -> Data? {
+        do {
+            let encoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
+            encoder.dateEncodingStrategy = .iso8601
+            encoder.outputFormatting = .sortedKeys
+            
+            return try encoder.encode(value)
+        } catch {
+            // In production, you'd want to log this properly
+            assertionFailure("Failed to encode \(T.self): \(error)")
+            return nil
+        }
+    }
+}
+
 enum AuthRouter: ApiRouter {
     
     case login(email: String, password: String)

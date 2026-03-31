@@ -9,11 +9,17 @@ import Foundation
 
 enum PostsRouter: ApiRouter {
     case postsFeed(cursor: String? = nil)
+    case detailedPost(postID: Int)
+    case createPost(postRequest: CreatePostRequest)
     
     var path: String {
         switch self {
         case .postsFeed:
             return "/posts/paginated"
+        case .detailedPost(let postID):
+            return "/posts/\(postID)"
+        case .createPost(let postRequest):
+            return "/posts"
         }
     }
     
@@ -21,6 +27,10 @@ enum PostsRouter: ApiRouter {
         switch self {
         case .postsFeed:
             return .GET
+        case .detailedPost:
+            return .GET
+        case .createPost:
+            return .POST
         }
     }
     
@@ -31,10 +41,17 @@ enum PostsRouter: ApiRouter {
                 return [URLQueryItem(name: "cursor", value: cursor)]
             }
             return nil
+        default:
+            return nil
         }
     }
     
     var body: Data? {
-        nil
+        switch self {
+        case .createPost(let postRequest):
+            return encodeToJSON(postRequest)
+        default:
+            return nil
+        }
     }
 }

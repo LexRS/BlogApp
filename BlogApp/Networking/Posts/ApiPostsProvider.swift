@@ -11,6 +11,8 @@ protocol ApiPostsProvider: AnyObject {
     func getPosts(cursor: String?) async throws -> PostsResponse
     func getPost(id: Int) async throws -> Post
     func createPost(_ post: CreatePostRequest) async throws -> Post
+    func deletePost(id: Int) async throws
+    func updatePost(_ post: UpdatePostRequest) async throws -> Post
 }
 
 final class DefaultApiPostsProvider: ApiPostsProvider {
@@ -34,6 +36,17 @@ final class DefaultApiPostsProvider: ApiPostsProvider {
     
     func createPost(_ post: CreatePostRequest) async throws -> Post {
         let router = PostsRouter.createPost(postRequest: post)
+        let response: Post = try await apiProvider.request(router)
+        return response
+    }
+    
+    func deletePost(id: Int) async throws {
+        let router = PostsRouter.delete(postID: id)
+        let _ : EmptyResponse = try await apiProvider.request(router)
+    }
+    
+    func updatePost(_ post: UpdatePostRequest) async throws -> Post {
+        let router = PostsRouter.updatePost(postRequest: post)
         let response: Post = try await apiProvider.request(router)
         return response
     }

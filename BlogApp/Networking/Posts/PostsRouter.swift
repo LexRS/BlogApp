@@ -11,6 +11,8 @@ enum PostsRouter: ApiRouter {
     case postsFeed(cursor: String? = nil)
     case detailedPost(postID: Int)
     case createPost(postRequest: CreatePostRequest)
+    case delete(postID: Int)
+    case updatePost(postRequest: UpdatePostRequest)
     
     var path: String {
         switch self {
@@ -18,8 +20,12 @@ enum PostsRouter: ApiRouter {
             return "/posts/paginated"
         case .detailedPost(let postID):
             return "/posts/\(postID)"
-        case .createPost(let postRequest):
+        case .createPost:
             return "/posts"
+        case .delete(let postID):
+            return "/posts/\(postID)"
+        case .updatePost(let postRequest):
+            return "/posts/\(postRequest.id)"
         }
     }
     
@@ -31,6 +37,10 @@ enum PostsRouter: ApiRouter {
             return .GET
         case .createPost:
             return .POST
+        case .delete:
+            return .DELETE
+        case .updatePost:
+            return .PUT
         }
     }
     
@@ -49,6 +59,8 @@ enum PostsRouter: ApiRouter {
     var body: Data? {
         switch self {
         case .createPost(let postRequest):
+            return encodeToJSON(postRequest)
+        case .updatePost(let postRequest):
             return encodeToJSON(postRequest)
         default:
             return nil

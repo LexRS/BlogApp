@@ -11,6 +11,8 @@ enum ApiError: LocalizedError, Equatable {
     case invalidURL
     case decodingError
     case networkError(String)
+    case unexpectedEmptyResponse
+    case emptyData
     
     var errorDescription: String? {
         switch self {
@@ -20,6 +22,10 @@ enum ApiError: LocalizedError, Equatable {
             return "Failed to decode response"
         case .networkError(let message):
             return "Network error: \(message)"
+        case .unexpectedEmptyResponse:
+            return "Unexpected empty response"
+        case .emptyData:
+            return "Empty data"
         }
     }
 }

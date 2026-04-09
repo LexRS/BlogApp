@@ -6,25 +6,29 @@
 //
 
 import SwiftUI
-import ComposableArchitecture
 
 @main
-struct BlogApp: App {
-    @StateObject private var appCoordinator: AppCoordinator
-    private let dependencies: Dependencies
+struct MVVMCoordinatorApp: App {
+    @StateObject private var coordinator = AppCoordinator()
+    private var container = AppDIContainer()
     
-    init() {
-        let container = Dependencies()
-        dependencies = container
-        _appCoordinator = StateObject(wrappedValue: AppCoordinator(container: container))
-    }
     
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $appCoordinator.path) {
-                appCoordinator.makeRootView()
+            NavigationStack(path: $coordinator.path) {
+                PostsFeedView(coordinator: coordinator, viewModel: container.resolve())
+                .navigationDestination(for: AppRoute.self) { route in
+                    destinationView(for: route)
+                }
             }
-            .environmentObject(appCoordinator)
+        }
+    }
+    
+    @ViewBuilder
+    private func destinationView(for route: AppRoute) -> some View {
+        switch route {
+        case .postDetail(let post):
+            PostDetailView(coordinator: coordinator, viewModel: container.resolve(argument: post.id))
         }
     }
 }

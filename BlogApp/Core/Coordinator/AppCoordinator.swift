@@ -5,25 +5,53 @@
 //  Created by Алексей Поддубный on 30.03.2026.
 //
 
-import UIKit
-import Combine
 import SwiftUI
+import Combine
 
-final class AppCoordinator: ObservableObject {
-    private let container: Dependencies
+protocol Coordinator: ObservableObject {
+    associatedtype Route: Hashable
+    var path: NavigationPath { get set }
+    func navigate(to route: Route)
+    func pop()
+    func popToRoot()
+}
+
+enum AppRoute: Hashable {
+    case postDetail(Post)
+}
+
+class AppCoordinator: Coordinator {
     @Published var path = NavigationPath()
+    @Published var alertMessage: String?
+    @Published var showAlert = false
     
-    init(container: Dependencies) {
-        self.container = container
+    func navigate(to route: AppRoute) {
+        path.append(route)
     }
     
-    @ViewBuilder
-    func makeRootView() -> some View {
-        showPostsFeed()
+    func pop() {
+        guard !path.isEmpty else { return }
+        path.removeLast()
     }
     
-    private func showPostsFeed() -> some View {
-        let postsFeedViewModel = container.getPostsFeedViewModel()
-        return PostsFeedView(viewModel: postsFeedViewModel)
+    func popToRoot() {
+        path.removeLast(path.count)
+    }
+    
+    func handleError(_ error: NavigationError) {
+        alertMessage = error.localizedDescription
+        showAlert = true
+    }
+}
+
+enum NavigationError: Error, LocalizedError {
+    case invalidUser
+    case networkError
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidUser: return "Invalid user data"
+        case .networkError: return "Network connection failed"
+        }
     }
 }

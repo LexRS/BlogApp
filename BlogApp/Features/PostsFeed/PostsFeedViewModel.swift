@@ -9,12 +9,14 @@ import SwiftUI
 import Combine
 
 // MARK: - ViewModel Protocol
+
 protocol PostsFeedViewModelProtocol: ObservableObject {
     var posts: [Post] { get }
     var isLoading: Bool { get }
     var isLoadingMore: Bool { get }
     var errorMessage: String? { get }
     var hasMore: Bool { get }
+    var selectedPost: Post? { get set }
     
     func onAppear()
     func didSelectPost(_ post: Post)
@@ -32,14 +34,13 @@ final class PostsFeedViewModel: PostsFeedViewModelProtocol {
     @Published private(set) var isLoadingMore = false
     @Published private(set) var errorMessage: String?
     @Published private(set) var hasMore = true
+    @Published var selectedPost: Post?
     
     private let apiPostsProvider: ApiPostsProvider
-    private let coordinator: PostsFeedCoordinatorProtocol
     private var currentCursor: String?
     
-    init(apiPostsProvider: ApiPostsProvider, coordinator: PostsFeedCoordinatorProtocol) {
+    init(apiPostsProvider: ApiPostsProvider) {
         self.apiPostsProvider = apiPostsProvider
-        self.coordinator = coordinator
     }
     
     func onAppear() {
@@ -49,15 +50,15 @@ final class PostsFeedViewModel: PostsFeedViewModelProtocol {
     }
     
     func didSelectPost(_ post: Post) {
-        coordinator.showPostDetails(post)
+//        coordinator?.showDetailPost(post: post)
     }
     
     func didTapAddButton() {
-        coordinator.showCreatePost { [weak self] newPost in
-            if let newPost = newPost {
-                self?.posts.insert(newPost, at: 0)
-            }
-        }
+//        coordinator.showCreatePost { [weak self] newPost in
+//            if let newPost = newPost {
+//                self?.posts.insert(newPost, at: 0)
+//            }
+//        }
     }
     
     func onRefresh() {

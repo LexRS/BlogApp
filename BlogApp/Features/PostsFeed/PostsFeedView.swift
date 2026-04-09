@@ -9,8 +9,10 @@ import SwiftUI
 
 struct PostsFeedView: View {
     @StateObject private var viewModel: PostsFeedViewModel
+    @ObservedObject var coordinator: AppCoordinator
     
-    init(viewModel: PostsFeedViewModel) {
+    init(coordinator: AppCoordinator, viewModel: PostsFeedViewModel) {
+        self.coordinator = coordinator
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -76,6 +78,9 @@ struct PostsFeedView: View {
     private func postsSection() -> some View {
         ForEach(viewModel.posts) { post in
             PostRow(post: post)
+                .onTapGesture {
+                    coordinator.navigate(to: .postDetail(post))
+                }
                 .onAppear {
                     if post.id == viewModel.posts.last?.id && viewModel.hasMore {
                         viewModel.loadMorePosts()

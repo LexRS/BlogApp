@@ -62,7 +62,6 @@ class DIContainer: DIContainerProtocol {
     
     func register<T>(_ type: T.Type, _ factory: @escaping (DIContainer) -> T) {
         let key = DIKey(value: type).key
-        //let key = String(describing: type)
         factories[key] = factory
     }
     
@@ -84,7 +83,6 @@ class DIContainer: DIContainerProtocol {
             let instance = factory(container)
             var instances = self.sharedInstances
             instances[key] = instance
-            // In a real implementation, you'd need to update sharedInstances
             return instance
         }
     }

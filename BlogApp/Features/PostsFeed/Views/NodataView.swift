@@ -10,7 +10,6 @@ import SwiftUI
 struct NodataView: View {
     var body: some View {
         Image("no_data_icon")
-        Text("heuvo-kukuevo")
     }
 }
 

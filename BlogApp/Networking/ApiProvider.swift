@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ApiProvider {
+protocol ApiProvider: AnyObject {
     func request<T: Decodable>(_ router: ApiRouter) async throws -> T
 }
 
@@ -32,11 +32,35 @@ class DefaultApiProvider: ApiProvider {
         #if DEBUG
         printCurl(request: request, includeHeaders: true, includeBody: true)
         #endif
-        let (data, _) = try await session.data(for: request)
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        let response = try decoder.decode(T.self, from: data)
-        return response
+        let (data, response) = try await session.data(for: request)
+        
+        // Check for empty response (204 No Content)
+        if let httpResponse = response as? HTTPURLResponse,
+           httpResponse.statusCode == 204 {
+            // Return empty instance for EmptyResponse type
+            if T.self == EmptyResponse.self {
+                return EmptyResponse() as! T
+            }
+            // If expecting non-empty but got 204, throw error
+            throw ApiError.unexpectedEmptyResponse
+        }
+        
+        // Handle cases where data might be empty
+        guard !data.isEmpty else {
+            if T.self == EmptyResponse.self {
+                return EmptyResponse() as! T
+            }
+            throw ApiError.emptyData
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let response = try decoder.decode(T.self, from: data)
+            return response
+        } catch {
+            throw ApiError.decodingError
+        }
     }
     
     private func buildRequest(_ router: ApiRouter) throws -> URLRequest {
@@ -107,4 +131,8 @@ private extension ApiProvider {
         let curlCommand = components.joined(separator: " ")
         print("🔗 \(curlCommand)")
     }
+}
+
+public struct EmptyResponse: Decodable {
+    public init() {}
 }

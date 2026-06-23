@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol AuthProvider {
+protocol AuthProvider: AnyObject {
     func authorize(_ request: URLRequest) async throws -> URLRequest
 }
 

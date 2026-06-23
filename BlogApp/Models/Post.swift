@@ -7,7 +7,7 @@
 import Foundation
 import Combine
 
-struct Post: Codable, Identifiable, Equatable {
+struct Post: Codable, Identifiable, Hashable {
     let id: Int
     let title: String
     let content: String

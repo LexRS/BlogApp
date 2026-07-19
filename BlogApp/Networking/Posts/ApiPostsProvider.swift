@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Core
 
 protocol ApiPostsProvider: AnyObject {
     func getPosts(cursor: String?) async throws -> PostsResponse

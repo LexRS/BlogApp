@@ -6,33 +6,41 @@
 //
 
 import Foundation
-
-protocol ApiProvider: AnyObject {
-    func request<T: Decodable>(_ router: ApiRouter) async throws -> T
-}
+import AuthSDK
+import Core
 
 class DefaultApiProvider: ApiProvider {
-    private let config: Config
-    private let authProvider: AuthProvider
+    private let config: ConfigProtocol
+    private let sessionProvider: SessionProviderProtocol
     private let session: URLSession
     
     init(
-        config: Config,
-        authProvider: AuthProvider,
+        config: ConfigProtocol,
+        sessionProvider: SessionProviderProtocol,
         session: URLSession = .shared
     ) {
         self.config = config
-        self.authProvider = authProvider
+        self.sessionProvider = sessionProvider
         self.session = session
     }
     
     func request<T>(_ router: any ApiRouter) async throws -> T where T : Decodable {
-        let request = try buildRequest(router)
+        let request = try await buildRequest(router)
+        let authorizedRequest = try await sessionProvider.authorize(request)
         
         #if DEBUG
-        printCurl(request: request, includeHeaders: true, includeBody: true)
+        await printCurl(request: authorizedRequest, includeHeaders: true, includeBody: true)
         #endif
         let (data, response) = try await session.data(for: request)
+        
+        // Handle 401 unauthorized - If token expired
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 401 {
+            // TODO: -  Update token logic here
+            // You could implement token refresh logic here
+            // For example, call a refresh endpoint and update sessionKeeper
+            // Then retry the request once
+            throw ApiError.unauthorized
+        }
         
         // Check for empty response (204 No Content)
         if let httpResponse = response as? HTTPURLResponse,

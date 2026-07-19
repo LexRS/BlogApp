@@ -1,20 +1,21 @@
 //
 //  ApiError.swift
-//  BlogApp
+//  Core
 //
-//  Created by Алексей Поддубный on 13.02.2026.
+//  Created by Алексей Поддубный on 11.07.2026.
 //
 
 import Foundation
 
-enum ApiError: LocalizedError, Equatable {
+public enum ApiError: LocalizedError, Equatable {
     case invalidURL
     case decodingError
     case networkError(String)
     case unexpectedEmptyResponse
     case emptyData
+    case unauthorized
     
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .invalidURL:
             return "Invalid URL"
@@ -26,6 +27,8 @@ enum ApiError: LocalizedError, Equatable {
             return "Unexpected empty response"
         case .emptyData:
             return "Empty data"
+        case .unauthorized:
+            return "Unauthorized access"
         }
     }
 }

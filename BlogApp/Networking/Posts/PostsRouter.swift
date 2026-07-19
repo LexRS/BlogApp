@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Core
 
 enum PostsRouter: ApiRouter {
     case postsFeed(cursor: String? = nil)

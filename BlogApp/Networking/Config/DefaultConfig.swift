@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DefaultConfig: Config {
+struct DefaultConfig: ConfigProtocol {
     var baseUrl: String {
         let baseUrlScheme: String = info(.apiBaseUrlScheme)
         let baseDomain: String = info(.apiBaseUrl)

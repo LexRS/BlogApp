@@ -7,102 +7,78 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4BF87FE03002A47B004B569C /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF87FDF3002A47B004B569C /* Core.framework */; };
-		4BF87FE13002A47B004B569C /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF87FDF3002A47B004B569C /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF87F453002A0F0004B569C /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF87F393002A0F0004B569C /* Core.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		4BF87FE23002A47C004B569C /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4BF87FE13002A47B004B569C /* Core.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
+/* Begin PBXContainerItemProxy section */
+		4BF87F463002A0F0004B569C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BF87F303002A0F0004B569C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4BF87F383002A0F0004B569C;
+			remoteInfo = Core;
 		};
-/* End PBXCopyFilesBuildPhase section */
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4B95DF6F2FF7E942009C88D5 /* AuthSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AuthSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4BF87FDF3002A47B004B569C /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BF87F393002A0F0004B569C /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BF87F443002A0F0004B569C /* CoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4BF87F112FFFDD8C004B569C /* Exceptions for "AuthSDK" folder in "AuthSDK" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Models/RegistrationRequest.swift,
-			);
-			target = 4B95DF6E2FF7E942009C88D5 /* AuthSDK */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		4BF87F122FFFDD8C004B569C /* Exceptions for "AuthSDK" folder in "Copy Bundle Resources" phase from "AuthSDK" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 4B95DF6D2FF7E942009C88D5 /* Resources */;
-			membershipExceptions = (
-				Models/RegistrationRequest.swift,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4B95DF712FF7E942009C88D5 /* AuthSDK */ = {
+		4BF87F3B3002A0F0004B569C /* Core */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4BF87F112FFFDD8C004B569C /* Exceptions for "AuthSDK" folder in "AuthSDK" target */,
-				4BF87F122FFFDD8C004B569C /* Exceptions for "AuthSDK" folder in "Copy Bundle Resources" phase from "AuthSDK" target */,
-			);
-			path = AuthSDK;
+			path = Core;
+			sourceTree = "<group>";
+		};
+		4BF87F483002A0F0004B569C /* CoreTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CoreTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4B95DF6C2FF7E942009C88D5 /* Frameworks */ = {
+		4BF87F363002A0F0004B569C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BF87FE03002A47B004B569C /* Core.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BF87F413002A0F0004B569C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BF87F453002A0F0004B569C /* Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4B95DF652FF7E941009C88D5 = {
+		4BF87F2F3002A0F0004B569C = {
 			isa = PBXGroup;
 			children = (
-				4B95DF712FF7E942009C88D5 /* AuthSDK */,
-				4BF87FDE3002A47B004B569C /* Frameworks */,
-				4B95DF702FF7E942009C88D5 /* Products */,
+				4BF87F3B3002A0F0004B569C /* Core */,
+				4BF87F483002A0F0004B569C /* CoreTests */,
+				4BF87F3A3002A0F0004B569C /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		4B95DF702FF7E942009C88D5 /* Products */ = {
+		4BF87F3A3002A0F0004B569C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4B95DF6F2FF7E942009C88D5 /* AuthSDK.framework */,
+				4BF87F393002A0F0004B569C /* Core.framework */,
+				4BF87F443002A0F0004B569C /* CoreTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		4BF87FDE3002A47B004B569C /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				4BF87FDF3002A47B004B569C /* Core.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		4B95DF6A2FF7E942009C88D5 /* Headers */ = {
+		4BF87F343002A0F0004B569C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -112,66 +88,99 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		4B95DF6E2FF7E942009C88D5 /* AuthSDK */ = {
+		4BF87F383002A0F0004B569C /* Core */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4B95DF782FF7E942009C88D5 /* Build configuration list for PBXNativeTarget "AuthSDK" */;
+			buildConfigurationList = 4BF87F4D3002A0F0004B569C /* Build configuration list for PBXNativeTarget "Core" */;
 			buildPhases = (
-				4B95DF6A2FF7E942009C88D5 /* Headers */,
-				4B95DF6B2FF7E942009C88D5 /* Sources */,
-				4B95DF6C2FF7E942009C88D5 /* Frameworks */,
-				4B95DF6D2FF7E942009C88D5 /* Resources */,
-				4BF87FE23002A47C004B569C /* Embed Frameworks */,
+				4BF87F343002A0F0004B569C /* Headers */,
+				4BF87F353002A0F0004B569C /* Sources */,
+				4BF87F363002A0F0004B569C /* Frameworks */,
+				4BF87F373002A0F0004B569C /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4B95DF712FF7E942009C88D5 /* AuthSDK */,
+				4BF87F3B3002A0F0004B569C /* Core */,
 			);
-			name = AuthSDK;
+			name = Core;
 			packageProductDependencies = (
 			);
-			productName = AuthSDK;
-			productReference = 4B95DF6F2FF7E942009C88D5 /* AuthSDK.framework */;
+			productName = Core;
+			productReference = 4BF87F393002A0F0004B569C /* Core.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		4BF87F433002A0F0004B569C /* CoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4BF87F503002A0F0004B569C /* Build configuration list for PBXNativeTarget "CoreTests" */;
+			buildPhases = (
+				4BF87F403002A0F0004B569C /* Sources */,
+				4BF87F413002A0F0004B569C /* Frameworks */,
+				4BF87F423002A0F0004B569C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4BF87F473002A0F0004B569C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4BF87F483002A0F0004B569C /* CoreTests */,
+			);
+			name = CoreTests;
+			packageProductDependencies = (
+			);
+			productName = CoreTests;
+			productReference = 4BF87F443002A0F0004B569C /* CoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		4B95DF662FF7E941009C88D5 /* Project object */ = {
+		4BF87F303002A0F0004B569C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
-					4B95DF6E2FF7E942009C88D5 = {
+					4BF87F383002A0F0004B569C = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					4BF87F433002A0F0004B569C = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
-			buildConfigurationList = 4B95DF692FF7E941009C88D5 /* Build configuration list for PBXProject "AuthSDK" */;
+			buildConfigurationList = 4BF87F333002A0F0004B569C /* Build configuration list for PBXProject "Core" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 4B95DF652FF7E941009C88D5;
+			mainGroup = 4BF87F2F3002A0F0004B569C;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 4B95DF702FF7E942009C88D5 /* Products */;
+			productRefGroup = 4BF87F3A3002A0F0004B569C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4B95DF6E2FF7E942009C88D5 /* AuthSDK */,
+				4BF87F383002A0F0004B569C /* Core */,
+				4BF87F433002A0F0004B569C /* CoreTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4B95DF6D2FF7E942009C88D5 /* Resources */ = {
+		4BF87F373002A0F0004B569C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BF87F423002A0F0004B569C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -181,7 +190,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4B95DF6B2FF7E942009C88D5 /* Sources */ = {
+		4BF87F353002A0F0004B569C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BF87F403002A0F0004B569C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -190,8 +206,16 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4BF87F473002A0F0004B569C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4BF87F383002A0F0004B569C /* Core */;
+			targetProxy = 4BF87F463002A0F0004B569C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
-		4B95DF762FF7E942009C88D5 /* Debug */ = {
+		4BF87F4B3002A0F0004B569C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -258,7 +282,7 @@
 			};
 			name = Debug;
 		};
-		4B95DF772FF7E942009C88D5 /* Release */ = {
+		4BF87F4C3002A0F0004B569C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -318,7 +342,7 @@
 			};
 			name = Release;
 		};
-		4B95DF792FF7E942009C88D5 /* Debug */ = {
+		4BF87F4E3002A0F0004B569C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -340,7 +364,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = ru.poddubny.AuthSDK;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.poddubny.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -354,7 +378,7 @@
 			};
 			name = Debug;
 		};
-		4B95DF7A2FF7E942009C88D5 /* Release */ = {
+		4BF87F4F3002A0F0004B569C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -376,7 +400,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = ru.poddubny.AuthSDK;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.poddubny.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -390,28 +414,75 @@
 			};
 			name = Release;
 		};
+		4BF87F513002A0F0004B569C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9ZFC28246W;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.poddubny.CoreTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4BF87F523002A0F0004B569C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9ZFC28246W;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.poddubny.CoreTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4B95DF692FF7E941009C88D5 /* Build configuration list for PBXProject "AuthSDK" */ = {
+		4BF87F333002A0F0004B569C /* Build configuration list for PBXProject "Core" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B95DF762FF7E942009C88D5 /* Debug */,
-				4B95DF772FF7E942009C88D5 /* Release */,
+				4BF87F4B3002A0F0004B569C /* Debug */,
+				4BF87F4C3002A0F0004B569C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4B95DF782FF7E942009C88D5 /* Build configuration list for PBXNativeTarget "AuthSDK" */ = {
+		4BF87F4D3002A0F0004B569C /* Build configuration list for PBXNativeTarget "Core" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B95DF792FF7E942009C88D5 /* Debug */,
-				4B95DF7A2FF7E942009C88D5 /* Release */,
+				4BF87F4E3002A0F0004B569C /* Debug */,
+				4BF87F4F3002A0F0004B569C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4BF87F503002A0F0004B569C /* Build configuration list for PBXNativeTarget "CoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BF87F513002A0F0004B569C /* Debug */,
+				4BF87F523002A0F0004B569C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 4B95DF662FF7E941009C88D5 /* Project object */;
+	rootObject = 4BF87F303002A0F0004B569C /* Project object */;
 }

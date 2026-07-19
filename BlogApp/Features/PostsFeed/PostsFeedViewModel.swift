@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Core
 
 // MARK: - ViewModel Protocol
 

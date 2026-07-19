@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		4BF0FA222FF81906007114AE /* AuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF0FA212FF81906007114AE /* AuthSDK.framework */; };
 		4BF0FA232FF81906007114AE /* AuthSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF0FA212FF81906007114AE /* AuthSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF87FDA3002A3D5004B569C /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF87FD93002A3D5004B569C /* Core.framework */; };
+		4BF87FDB3002A3D5004B569C /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF87FD93002A3D5004B569C /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -19,6 +21,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4BF0FA232FF81906007114AE /* AuthSDK.framework in Embed Frameworks */,
+				4BF87FDB3002A3D5004B569C /* Core.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -28,6 +31,7 @@
 /* Begin PBXFileReference section */
 		4BF0FA212FF81906007114AE /* AuthSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AuthSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BF4CBFD2F3247AB00D2F26B /* BlogApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlogApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BF87FD93002A3D5004B569C /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -57,6 +61,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BF0FA222FF81906007114AE /* AuthSDK.framework in Frameworks */,
+				4BF87FDA3002A3D5004B569C /* Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +71,7 @@
 		4BF0FA202FF81906007114AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BF87FD93002A3D5004B569C /* Core.framework */,
 				4BF0FA212FF81906007114AE /* AuthSDK.framework */,
 			);
 			name = Frameworks;

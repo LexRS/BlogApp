@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol Config {
+protocol ConfigProtocol {
     var baseUrl: String { get }
 }

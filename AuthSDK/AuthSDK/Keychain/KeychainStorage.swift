@@ -1,8 +1,8 @@
 //
 //  KeychainStorage.swift
-//  BlogApp
+//  AuthSDK
 //
-//  Created by Алексей Поддубный on 09.03.2026.
+//  Created by Алексей Поддубный on 09.07.2026.
 //
 
 import Foundation

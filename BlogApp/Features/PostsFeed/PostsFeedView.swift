@@ -8,13 +8,8 @@
 import SwiftUI
 
 struct PostsFeedView: View {
-    @StateObject private var viewModel: PostsFeedViewModel
-    @ObservedObject var coordinator: AppCoordinator
-    
-    init(coordinator: AppCoordinator, viewModel: PostsFeedViewModel) {
-        self.coordinator = coordinator
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
+    @EnvironmentObject private var viewModel: PostsFeedViewModel
+    @EnvironmentObject var coordinator: AppCoordinator
     
     var body: some View {
         NavigationStack {
@@ -79,7 +74,7 @@ struct PostsFeedView: View {
         ForEach(viewModel.posts) { post in
             PostRow(post: post)
                 .onTapGesture {
-                    coordinator.navigate(to: .postDetail(post))
+                    //coordinator.navigate(to: AppRoute.postDetail(post))
                 }
                 .onAppear {
                     if post.id == viewModel.posts.last?.id && viewModel.hasMore {

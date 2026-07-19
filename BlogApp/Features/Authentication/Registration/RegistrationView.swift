@@ -9,17 +9,11 @@ import SwiftUI
 import AuthSDK
 
 struct RegistrationView: View {
-    @StateObject private var viewModel: RegistrationViewModel
+    @EnvironmentObject private var viewModel: RegistrationViewModel
+    @EnvironmentObject private var coordinator: AppCoordinator
+    
     @State private var currentIndex = 0
     @State private var animateMove = false
-    
-    let manager = AuthenticationManager()
-    
-    init(viewModel: RegistrationViewModel, currentIndex: Int = 0, animateMove: Bool = false) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-        self.currentIndex = currentIndex
-        self.animateMove = animateMove
-    }
     
     var body: some View {
         VStack {
@@ -27,24 +21,17 @@ struct RegistrationView: View {
             
             TabView(selection: $currentIndex) {
                 ForEach(0..<viewModel.screenNames.count, id: \.self) { index in
-                    // Design your individual container layout here
-                    CardView(
-                        name: viewModel.screenNames[index].name,
-                        email: $viewModel.email,
-                        password: $viewModel.password,
-                        buttonTitle: viewModel.screenNames[index].buttonTitle
-                    )
+                    CardView(viewModel: viewModel, index: index)
                         .tag(index) // Essential for linking the page to the picker state
                 }
             }
-            .tabViewStyle(.page(indexDisplayMode: .never)) // Hides native page dots layout
-            .frame(height: 200)
+            .tabViewStyle(.page(indexDisplayMode: .never))
             
             Spacer()
             
             Picker("What is your favorite color", selection: $currentIndex) {
-                Text("Login").tag(0)
-                Text("Registration").tag(1)
+                Text(viewModel.screenNames[0].name).tag(0)
+                Text(viewModel.screenNames[1].name).tag(1)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal,40)
@@ -58,45 +45,59 @@ struct RegistrationView: View {
                 }
             }
         }
+        .onChange(of: viewModel.isAuthorized) { _, isAuthorized in
+            if isAuthorized { // 👈 Проверяем новое пришедшее значение
+                coordinator.showMainFlow()
+            }
+        }
     }
 }
 
-// Example design for the view containers inside the paging layout
 struct CardView: View {
-    let name: String
-    @Binding var email: String
-    @Binding var password: String
-    var buttonTitle: String
+    @ObservedObject var viewModel: RegistrationViewModel
+    let index: Int
     
     var body: some View {
         VStack(spacing: 12) {
-            Text("\(name)")
+            Text("\(viewModel.screenNames[index].name)")
                 .font(.system(.title3))
                 .foregroundStyle(.white)
             
-            TextField("E-mail", text: $email)
+            if viewModel.screenNames[index].name == "Registration" {
+                TextField("Username", text: $viewModel.userName.orEmpty)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.horizontal, 20)
+            }
+            TextField("E-mail", text: $viewModel.email)
                 .textFieldStyle(.roundedBorder)
                 .padding(.horizontal, 20)
-            TextField("Password", text: $password)
+            TextField("Password", text: $viewModel.password)
                 .textFieldStyle(.roundedBorder)
                 .padding(.horizontal, 20)
             
             
-            Text("Completely replaces the previous screen.")
-                .font(.caption)
-                .foregroundColor(.white.opacity(0.8))
+            if viewModel.screenNames[index].name == "Registration" {
+                Text("Username should have min 3 max 50 chars. Password at least 6 chars")
+                    .multilineTextAlignment(.center)
+                    .font(.caption)
+                    .foregroundColor(.white.opacity(0.8))
+            }
             
-            Button("\(buttonTitle)") {
-                print("\(buttonTitle)")
+            Button("\(viewModel.screenNames[index].buttonTitle)") {
+                if viewModel.screenNames[index].name == "Registration" {
+                    viewModel.registerButtonTapped()
+                } else {
+                    viewModel.loginButtonTapped()
+                }
             }
             .font(.subheadline)
             .foregroundColor(.white)
-            .frame(width: 140)
-            .background(name == "Registration" ? .purple : .blue)
+            .frame(width: 140, height: 30)
+            .background(viewModel.screenNames[index].name == "Registration" ? .purple : .blue)
             .cornerRadius(12)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(name == "Registration" ? .blue : .purple)
+        .background(viewModel.screenNames[index].name == "Registration" ? .blue : .purple)
         .cornerRadius(24)
         .padding(.horizontal, 20) // Gives a beautiful card layout effect
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
@@ -105,6 +106,5 @@ struct CardView: View {
 
 
 #Preview {
-    let model = RegistrationViewModel()
-    return RegistrationView(viewModel: model)
+    RegistrationView()
 }

@@ -1,21 +1,21 @@
 //
 //  AuthProvider.swift
-//  BlogApp
+//  AuthSDK
 //
-//  Created by Алексей Поддубный on 07.03.2026.
+//  Created by Алексей Поддубный on 09.07.2026.
 //
 
 import Foundation
+import Combine
 
-protocol AuthProvider: AnyObject {
+public protocol SessionProviderProtocol: AnyObject {
     func authorize(_ request: URLRequest) async throws -> URLRequest
 }
 
-final class DefaultAuthProvider: AuthProvider {
+final class DefaultSessionProvider: SessionProviderProtocol {
+    private let sessionKeeper: SessionKeeperProtocol
 
-    private let sessionKeeper: SessionKeeper
-
-    init(sessionKeeper: SessionKeeper) {
+    init(sessionKeeper: SessionKeeperProtocol) {
         self.sessionKeeper = sessionKeeper
     }
 

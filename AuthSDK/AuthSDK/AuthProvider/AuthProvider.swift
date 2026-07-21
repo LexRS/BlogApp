@@ -11,25 +11,42 @@ import Core
 public protocol AuthProviderProtocol {
     func register(username: String, email: String, password: String) async throws -> AuthResponse
     func login(email: String, password: String) async throws -> AuthResponse
+    func logout()
 }
 
 public class DefaultAuthProvider: AuthProviderProtocol {
-    private var apiProvider: ApiProvider
+    private let apiProvider: ApiProvider
+    private let sessionProvider: SessionProviderProtocol
     
-    public init(apiProvider: ApiProvider) {
+    public init(apiProvider: ApiProvider, sessionProvider: SessionProviderProtocol) {
         self.apiProvider = apiProvider
+        self.sessionProvider = sessionProvider
     }
     
     public func register(username: String, email: String, password: String) async throws -> AuthResponse {
         let router = AuthRouter.register(username: username, email: email, password: password)
         let result: AuthResponse = try await apiProvider.request(router)
+        await saveSession(from: result)
         return result
     }
     
     public func login(email: String, password: String) async throws -> AuthResponse {
         let router = AuthRouter.login(email: email, password: password)
         let result: AuthResponse = try await apiProvider.request(router)
+        await saveSession(from: result)
         return result
+    }
+    
+    public func logout() {
+        // TODO: - Create logout logic
+        // await sessionKeeper.clearSession()
+    }
+    
+    private func saveSession(from response: AuthResponse) async {
+        let session = Session(
+            accessToken: response.token
+        )
+        await sessionProvider.saveSession(session)
     }
 }
 
@@ -58,6 +75,10 @@ public class AuthServiceMock: AuthProviderProtocol {
         case .failure(_):
             throw MockError.authMockError
         }
+    }
+    
+    public func logout() {
+        // TODO: - Create logout logic
     }
     
     enum MockError: Error {

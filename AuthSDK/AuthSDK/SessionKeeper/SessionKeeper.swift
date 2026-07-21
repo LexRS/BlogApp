@@ -13,11 +13,12 @@ public protocol SessionKeeperProtocol: Actor {
     var refreshToken: String? { get async }
     func saveSession(_ session: Session) async
     func clearSession() async
+    func refreshAccessToken(using refreshToken: String) async throws -> String
 }
 
-public struct Session: Sendable {
+public struct Session: Sendable, Codable {
     var accessToken: String
-    var refreshToken: String
+    var refreshToken: String?
 }
 
 actor DefaultSessionKeeper: SessionKeeperProtocol {
@@ -46,16 +47,22 @@ actor DefaultSessionKeeper: SessionKeeperProtocol {
     func saveSession(_ session: Session) async {
         await MainActor.run {
             storage.set(session.accessToken, for: KeychainKey.accessToken)
-            storage.set(session.refreshToken, for: KeychainKey.refreshToken)
+            //storage.set(session.refreshToken, for: KeychainKey.refreshToken)
         }
     }
 
     func clearSession() async {
         await MainActor.run {
             storage.remove(KeychainKey.accessToken)
-            storage.remove(KeychainKey.refreshToken)
+            //storage.remove(KeychainKey.refreshToken)
         }
     }
+    
+    func refreshAccessToken(using refreshToken: String) async throws -> String {
+        // TODO: - add logic for refreshing token
+        return "token"
+    }
+    
     
     static func create() -> DefaultSessionKeeper {
         DefaultSessionKeeper(storage: KeychainStorage())

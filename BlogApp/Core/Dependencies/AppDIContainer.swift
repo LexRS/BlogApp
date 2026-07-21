@@ -24,7 +24,7 @@ struct AppServices {
         self.config = DefaultConfig()
         self.sessionProvider = AuthAssembly.buildSessionProvider()
         self.apiProvider = DefaultApiProvider(config: config, sessionProvider: sessionProvider)
-        self.authProvider = DefaultAuthProvider(apiProvider: apiProvider)
+        self.authProvider = DefaultAuthProvider(apiProvider: apiProvider, sessionProvider: sessionProvider)
         self.apiPostsProvider = DefaultApiPostsProvider(apiProvider: apiProvider)
         self.registrationViewModel = RegistrationViewModel(authProvider: authProvider)
         self.postsFeedViewModel = PostsFeedViewModel(apiPostsProvider: apiPostsProvider)
@@ -44,7 +44,12 @@ private struct ApiProviderKey: EnvironmentKey {
 }
 
 private struct AuthProviderKey: EnvironmentKey {
-    static let defaultValue: AuthProviderProtocol = DefaultAuthProvider(apiProvider: DefaultApiProvider(config: DefaultConfig(), sessionProvider: AuthAssembly.buildSessionProvider()))
+    static let defaultValue: AuthProviderProtocol = DefaultAuthProvider(
+        apiProvider: DefaultApiProvider(
+            config: DefaultConfig(),
+            sessionProvider: AuthAssembly.buildSessionProvider()
+        ), sessionProvider: AuthAssembly.buildSessionProvider()
+    )
 }
 
 private struct ApiPostsProviderKey: EnvironmentKey {

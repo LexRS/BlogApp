@@ -14,6 +14,11 @@ class DefaultApiProvider: ApiProvider {
     private let sessionProvider: SessionProviderProtocol
     private let session: URLSession
     
+    // Add a lock to prevent multiple simultaneous refresh attempts
+    private let refreshLock = NSLock()
+    private var isRefreshing = false
+    private var pendingRequests: [(URLRequest) -> Void] = []
+    
     init(
         config: ConfigProtocol,
         sessionProvider: SessionProviderProtocol,
@@ -31,43 +36,32 @@ class DefaultApiProvider: ApiProvider {
         #if DEBUG
         await printCurl(request: authorizedRequest, includeHeaders: true, includeBody: true)
         #endif
-        let (data, response) = try await session.data(for: request)
-        
-        // Handle 401 unauthorized - If token expired
-        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 401 {
-            // TODO: -  Update token logic here
-            // You could implement token refresh logic here
-            // For example, call a refresh endpoint and update sessionKeeper
-            // Then retry the request once
-            throw ApiError.unauthorized
-        }
-        
-        // Check for empty response (204 No Content)
-        if let httpResponse = response as? HTTPURLResponse,
-           httpResponse.statusCode == 204 {
-            // Return empty instance for EmptyResponse type
-            if T.self == EmptyResponse.self {
-                return EmptyResponse() as! T
-            }
-            // If expecting non-empty but got 204, throw error
-            throw ApiError.unexpectedEmptyResponse
-        }
-        
-        // Handle cases where data might be empty
-        guard !data.isEmpty else {
-            if T.self == EmptyResponse.self {
-                return EmptyResponse() as! T
-            }
-            throw ApiError.emptyData
-        }
-        
         do {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            let response = try decoder.decode(T.self, from: data)
-            return response
+            let (data, response) = try await session.data(for: authorizedRequest)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                // Handle 401 - token expired
+                if httpResponse.statusCode == 401 {
+                    // Try to refresh token and retry
+                    let retryRequest = try await refreshAndRetry(request)
+                    let (retryData, retryResponse) = try await session.data(for: retryRequest)
+                    
+                    if let retryHttpResponse = retryResponse as? HTTPURLResponse,
+                       retryHttpResponse.statusCode == 401 {
+                        // Refresh failed - clear session and throw
+                        await sessionProvider.clearSession()
+                        throw ApiError.unauthorized
+                    }
+                    
+                    return try handleResponse(data: retryData, response: retryResponse)
+                }
+            }
+            
+            return try handleResponse(data: data, response: response)
+        
         } catch {
-            throw ApiError.decodingError
+            // Handle network errors
+            throw error
         }
     }
     
@@ -89,6 +83,111 @@ class DefaultApiProvider: ApiProvider {
         
         return request
     }
+    
+    // MARK: - Token Refresh Logic
+    private func refreshAndRetry(_ originalRequest: URLRequest) async throws -> URLRequest {
+        // Check if we're already refreshing
+        if isRefreshing {
+            // Wait for the ongoing refresh to complete
+            return try await withCheckedThrowingContinuation { continuation in
+                refreshLock.lock()
+                pendingRequests.append { newRequest in
+                    continuation.resume(returning: newRequest)
+                }
+                refreshLock.unlock()
+            }
+        }
+        
+        // Start refresh process
+        refreshLock.lock()
+        isRefreshing = true
+        refreshLock.unlock()
+        
+        defer {
+            refreshLock.lock()
+            isRefreshing = false
+            pendingRequests.removeAll()
+            refreshLock.unlock()
+        }
+        
+        // Get the refresh token
+        guard let refreshToken = await sessionProvider.refreshToken() else {
+            throw ApiError.unauthorized
+        }
+        
+        // Build refresh request
+        let refreshRequest = try buildRefreshRequest(refreshToken: refreshToken)
+        let (data, response) = try await session.data(for: refreshRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            // Refresh failed - clear session
+            await sessionProvider.clearSession()
+            throw ApiError.unauthorized
+        }
+        
+        // Decode new tokens
+        let newSession = try JSONDecoder().decode(Session.self, from: data)
+        await sessionProvider.saveSession(newSession)
+        
+        // Create new authorized request with new token
+        let newAuthorizedRequest = try await sessionProvider.authorize(originalRequest)
+        
+        // Complete pending requests with the new authorization
+        let pendingRequestsCopy: [(URLRequest) -> Void]
+        refreshLock.lock()
+        pendingRequestsCopy = pendingRequests
+        refreshLock.unlock()
+        
+        for completion in pendingRequestsCopy {
+            completion(newAuthorizedRequest)
+        }
+        
+        return newAuthorizedRequest
+    }
+    
+    // TODO: - All routing logic should be in router
+    private func buildRefreshRequest(refreshToken: String) throws -> URLRequest {
+        guard let url = URL(string: config.baseUrl + "/refresh") else {
+            throw ApiError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = ["refreshToken": refreshToken]
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        
+        return request
+    }
+
+    
+    // MARK: - Response Handling
+    private func handleResponse<T: Decodable>(data: Data, response: URLResponse) throws -> T {
+            if let httpResponse = response as? HTTPURLResponse,
+               httpResponse.statusCode == 204 {
+                if T.self == EmptyResponse.self {
+                    return EmptyResponse() as! T
+                }
+                throw ApiError.unexpectedEmptyResponse
+            }
+            
+            guard !data.isEmpty else {
+                if T.self == EmptyResponse.self {
+                    return EmptyResponse() as! T
+                }
+                throw ApiError.emptyData
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601
+                return try decoder.decode(T.self, from: data)
+            } catch {
+                throw ApiError.decodingError
+            }
+        }
 }
 
 private extension ApiProvider {

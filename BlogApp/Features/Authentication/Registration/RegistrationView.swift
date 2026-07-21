@@ -67,14 +67,16 @@ struct CardView: View {
                 TextField("Username", text: $viewModel.userName.orEmpty)
                     .textFieldStyle(.roundedBorder)
                     .padding(.horizontal, 20)
+                    .textInputAutocapitalization(.never)
             }
             TextField("E-mail", text: $viewModel.email)
                 .textFieldStyle(.roundedBorder)
                 .padding(.horizontal, 20)
+                .textInputAutocapitalization(.never)
             TextField("Password", text: $viewModel.password)
                 .textFieldStyle(.roundedBorder)
                 .padding(.horizontal, 20)
-            
+                .textInputAutocapitalization(.never)
             
             if viewModel.screenNames[index].name == "Registration" {
                 Text("Username should have min 3 max 50 chars. Password at least 6 chars")

@@ -9,12 +9,12 @@ import Foundation
 import Core
 
 enum AuthRouter: ApiRouter {
-    case register(username: String, email: String, password: String)
-    case login(email: String, password: String)
+    case register(registrationRequest: RegistrationRequest)
+    case login(loginRequest: LoginRequest)
 
     var path: String {
         switch self {
-        case .register(_, _, _):
+        case .register(_):
             return "/register"
         case .login:
             return "/login"
@@ -34,14 +34,10 @@ enum AuthRouter: ApiRouter {
 
     var body: Data? {
         switch self {
-        case .register(let username, let email, let password):
-            return try? JSONEncoder().encode(
-                RegistrationRequest(userName: username, email: email, password: password)
-            )
-        case let .login(email, password):
-            return try? JSONEncoder().encode(
-                LoginRequest(email: email, password: password)
-            )
+        case .register(let registrationRequest):
+            return try? JSONEncoder().encode(registrationRequest)
+        case let .login(loginRequest):
+            return try? JSONEncoder().encode(loginRequest)
         }
     }
 }

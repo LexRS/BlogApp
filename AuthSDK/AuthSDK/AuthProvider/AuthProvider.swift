@@ -9,8 +9,8 @@ import Foundation
 import Core
 
 public protocol AuthProviderProtocol {
-    func register(username: String, email: String, password: String) async throws -> AuthResponse
-    func login(email: String, password: String) async throws -> AuthResponse
+    func register(_ registrationRequest: RegistrationRequest) async throws -> AuthResponse
+    func login(_ loginRequest: LoginRequest) async throws -> AuthResponse
     func logout()
 }
 
@@ -23,15 +23,15 @@ public class DefaultAuthProvider: AuthProviderProtocol {
         self.sessionProvider = sessionProvider
     }
     
-    public func register(username: String, email: String, password: String) async throws -> AuthResponse {
-        let router = AuthRouter.register(username: username, email: email, password: password)
+    public func register(_ registrationRequest: RegistrationRequest) async throws -> AuthResponse {
+        let router = AuthRouter.register(registrationRequest: registrationRequest)
         let result: AuthResponse = try await apiProvider.request(router)
         await saveSession(from: result)
         return result
     }
     
-    public func login(email: String, password: String) async throws -> AuthResponse {
-        let router = AuthRouter.login(email: email, password: password)
+    public func login(_ loginRequest: LoginRequest) async throws -> AuthResponse {
+        let router = AuthRouter.login(loginRequest: loginRequest)
         let result: AuthResponse = try await apiProvider.request(router)
         await saveSession(from: result)
         return result
@@ -57,20 +57,20 @@ public class AuthServiceMock: AuthProviderProtocol {
         self.result = result
     }
     
-    public func register(username: String, email: String, password: String) async throws -> AuthResponse {
+    public func register(_ registerRequest: RegistrationRequest) async throws -> AuthResponse {
         switch result {
         case .success:
-            let mockResponse = AuthResponse(token: "mock-token", user: UserResponse(id: 1, username: username, email: email, role: "mock"))
+            let mockResponse = AuthResponse(token: "mock-token", user: UserResponse(id: 1, username: registerRequest.userName, email: registerRequest.email, role: "mock"))
             return mockResponse
         case .failure(_):
             throw MockError.authMockError
         }
     }
     
-    public func login(email: String, password: String) async throws -> AuthResponse {
+    public func login(_ loginRequest: LoginRequest) async throws -> AuthResponse {
         switch result {
         case .success:
-            let mockResponse = AuthResponse(token: "mock-token", user: UserResponse(id: 1, username: "mock-username", email: email, role: "mock"))
+            let mockResponse = AuthResponse(token: "mock-token", user: UserResponse(id: 1, username: "mock-username", email: loginRequest.email, role: "mock"))
             return mockResponse
         case .failure(_):
             throw MockError.authMockError

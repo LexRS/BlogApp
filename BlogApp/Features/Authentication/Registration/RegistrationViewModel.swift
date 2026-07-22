@@ -51,7 +51,7 @@ class RegistrationViewModel: RegistrationViewModelProtocol {
     ]
     
     func registerButtonTapped() {
-        guard let userName, isRegistrationDataValid() else {
+        guard let registrationRequest = createRegistrationRequest() else {
             return
         }
         
@@ -60,7 +60,7 @@ class RegistrationViewModel: RegistrationViewModelProtocol {
         
         Task { @MainActor in
             do {
-                let response = try await authProvider.register(username: userName, email: email, password: password)
+                let response = try await authProvider.register(registrationRequest)
                 handleSuccess(response)
             } catch {
                 handleError(error)
@@ -69,7 +69,7 @@ class RegistrationViewModel: RegistrationViewModelProtocol {
     }
     
     func loginButtonTapped() {
-        guard isLoginDataValid() else {
+        guard let loginRequest = createLoginRequest() else {
             return
         }
         
@@ -78,7 +78,7 @@ class RegistrationViewModel: RegistrationViewModelProtocol {
         
         Task { @MainActor in 
             do {
-                let response = try await authProvider.login(email: email, password: password)
+                let response = try await authProvider.login(loginRequest)
                 handleSuccess(response)
             } catch {
                 handleError(error)
@@ -99,31 +99,31 @@ class RegistrationViewModel: RegistrationViewModelProtocol {
         errorMessage = error.localizedDescription
     }
     
-    private func isRegistrationDataValid() -> Bool {
-        guard userName != nil else {
+    private func createRegistrationRequest() -> RegistrationRequest? {
+        guard let userName else {
             errorMessage = "Enter user name, please"
-            return false
+            return nil
         }
         guard email != "" else {
             errorMessage = "Email field should not be empty"
-            return false
+            return nil
         }
         guard password != "" else {
             errorMessage = "Password field should not be empty"
-            return false
+            return nil
         }
-        return true
+        return RegistrationRequest(userName: userName, email: email, password: password)
     }
     
-    private func isLoginDataValid() -> Bool {
+    private func createLoginRequest() -> LoginRequest? {
         guard email != "" else {
             errorMessage = "Email field should not be empty"
-            return false
+            return nil
         }
         guard password != "" else {
             errorMessage = "Password field should not be empty"
-            return false
+            return nil
         }
-        return true
+        return LoginRequest(email: email, password: password)
     }
 }

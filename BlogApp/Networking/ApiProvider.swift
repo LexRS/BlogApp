@@ -42,7 +42,7 @@ class DefaultApiProvider: ApiProviderProtocol {
             if let httpResponse = response as? HTTPURLResponse {
                 // Handle 401 - token expired
                 if httpResponse.statusCode == 401 {
-                    // Try to refresh token and retry
+                    // Try to refresh token and retry request
                     let retryRequest = try await refreshAndRetry(request)
                     let (retryData, retryResponse) = try await session.data(for: retryRequest)
                     

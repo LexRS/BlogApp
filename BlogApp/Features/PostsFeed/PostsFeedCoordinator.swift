@@ -11,9 +11,9 @@ protocol MainCoordinatorDelegate: AnyObject {
     func mainDidLogout()
 }
 
-class MainCoordinator: CoordinatorNew, ObservableObject {
+class MainCoordinator: CoordinatorProtocol, ObservableObject {
     weak var delegate: MainCoordinatorDelegate?
-    var childCoordinators: [any CoordinatorNew] = []
+    var childCoordinators: [any CoordinatorProtocol] = []
     @Published var currentTab: MainTab = .dashboard
     @Published var selectedItem: Any?
     

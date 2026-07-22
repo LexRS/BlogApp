@@ -29,9 +29,9 @@ final class PostDetailViewModel: PostDetailViewModelProtocol {
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorMessage: String?
     
-    private let apiPostsProvider: ApiPostsProvider
+    private let apiPostsProvider: ApiPostsProviderProtocol
     
-    init(postID: Int, apiPostsProvider: ApiPostsProvider) {
+    init(postID: Int, apiPostsProvider: ApiPostsProviderProtocol) {
         self.postID = postID
         self.apiPostsProvider = apiPostsProvider
     }

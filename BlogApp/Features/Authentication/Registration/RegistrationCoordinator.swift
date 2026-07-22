@@ -11,10 +11,10 @@ protocol RegistrationCoordinatorDelegate: AnyObject {
     func registrationDidFinishSuccess()
 }
 
-class RegistrationCoordinator: CoordinatorNew, ObservableObject {
+class RegistrationCoordinator: CoordinatorProtocol, ObservableObject {
     func start() {
     }
     
-    var childCoordinators: [any CoordinatorNew] = []
+    var childCoordinators: [any CoordinatorProtocol] = []
     weak var delegate: RegistrationCoordinatorDelegate?
 }

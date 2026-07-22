@@ -37,10 +37,10 @@ final class PostsFeedViewModel: PostsFeedViewModelProtocol {
     @Published private(set) var hasMore = true
     @Published var selectedPost: Post?
     
-    private let apiPostsProvider: ApiPostsProvider
+    private let apiPostsProvider: ApiPostsProviderProtocol
     private var currentCursor: String?
     
-    init(apiPostsProvider: ApiPostsProvider) {
+    init(apiPostsProvider: ApiPostsProviderProtocol) {
         self.apiPostsProvider = apiPostsProvider
     }
     

@@ -15,10 +15,10 @@ public protocol AuthProviderProtocol {
 }
 
 public class DefaultAuthProvider: AuthProviderProtocol {
-    private let apiProvider: ApiProvider
+    private let apiProvider: ApiProviderProtocol
     private let sessionProvider: SessionProviderProtocol
     
-    public init(apiProvider: ApiProvider, sessionProvider: SessionProviderProtocol) {
+    public init(apiProvider: ApiProviderProtocol, sessionProvider: SessionProviderProtocol) {
         self.apiProvider = apiProvider
         self.sessionProvider = sessionProvider
     }

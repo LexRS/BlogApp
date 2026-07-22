@@ -9,7 +9,7 @@ import Foundation
 import AuthSDK
 import Core
 
-class DefaultApiProvider: ApiProvider {
+class DefaultApiProvider: ApiProviderProtocol {
     private let config: ConfigProtocol
     private let sessionProvider: SessionProviderProtocol
     private let session: URLSession
@@ -190,7 +190,7 @@ class DefaultApiProvider: ApiProvider {
         }
 }
 
-private extension ApiProvider {
+private extension ApiProviderProtocol {
     func printCurl(request: URLRequest, includeHeaders: Bool = true, includeBody: Bool = true) {
         var components = ["curl -v"]
         

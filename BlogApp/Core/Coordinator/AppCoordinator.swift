@@ -8,46 +8,37 @@
 import SwiftUI
 import Combine
 
-protocol CoordinatorNew: ObservableObject {
-    var childCoordinators: [any CoordinatorNew] { get set }
+protocol CoordinatorProtocol: ObservableObject {
+    var childCoordinators: [any CoordinatorProtocol] { get set }
     func start()
 }
 
-extension CoordinatorNew {
-    func addChild(_ coordinator: any CoordinatorNew) {
+extension CoordinatorProtocol {
+    func addChild(_ coordinator: any CoordinatorProtocol) {
         childCoordinators.append(coordinator)
     }
     
-    func removeChild(_ coordinator: any CoordinatorNew) {
+    func removeChild(_ coordinator: any CoordinatorProtocol) {
         childCoordinators.removeAll { $0 === coordinator }
     }
 }
 
-class AppCoordinator: CoordinatorNew {
-    var childCoordinators: [any CoordinatorNew] = []
+@MainActor
+class AppCoordinator: CoordinatorProtocol {
+    var childCoordinators: [any CoordinatorProtocol] = []
     @Published var currentScreen: Screen = .registration
-    //private let window: UIWindow?
     
     enum Screen {
         case registration
         case postsFeed
     }
     
-//    init(window: UIWindow? = nil) {
-//        self.window = window
-//    }
-    
     func start() {
-        //showLoader()
         showRegistration()
     }
     
     func showRegistration() {
         currentScreen = .registration
-        //let loaderCoordinator = RegistrationCoordinator()
-        //loaderCoordinator.delegate = self
-        //addChild(loaderCoordinator)
-        //loaderCoordinator.start()
     }
     
     func showMainFlow() {

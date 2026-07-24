@@ -6,16 +6,17 @@
 //
 
 import Combine
+import SwiftUI
 
-protocol MainCoordinatorDelegate: AnyObject {
+protocol PostsFeedCoordinatorDelegate: AnyObject {
     func mainDidLogout()
 }
 
-class MainCoordinator: CoordinatorNew, ObservableObject {
-    weak var delegate: MainCoordinatorDelegate?
-    var childCoordinators: [any CoordinatorNew] = []
+class PostsFeedCoordinator: CoordinatorProtocol, ObservableObject {
+    @State var path = NavigationPath()
+    weak var delegate: PostsFeedCoordinatorDelegate?
+    var childCoordinators: [any CoordinatorProtocol] = []
     @Published var currentTab: MainTab = .dashboard
-    @Published var selectedItem: Any?
     
     enum MainTab {
         case dashboard
@@ -26,12 +27,16 @@ class MainCoordinator: CoordinatorNew, ObservableObject {
     func start() {
         currentTab = .dashboard
     }
-    
-    func navigateToProfile() {
-        currentTab = .profile
-    }
-    
-    func navigateToSettings() {
-        currentTab = .settings
-    }
 }
+
+//final class PostsFeedCoordinator: ObservableObject {
+//    @Published var path = NavigationPath()
+//
+//    func start() {
+//        path.removeLast(path.count)
+//    }
+//
+//    func showPostDetails(postID: Int) {
+//        path.append(Route.postDetails(postID))
+//    }
+//}

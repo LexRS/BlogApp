@@ -1,5 +1,5 @@
 //
-//  BlogAppApp.swift
+//  BlogApp.swift
 //  BlogApp
 //
 //  Created by Алексей Поддубный on 03.02.2026.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct MVVMCoordinatorApp: App {
+struct BlogApp: App {
     @StateObject private var appCoordinator = AppCoordinator()
     let services = AppServices()
     
@@ -30,6 +30,7 @@ struct MVVMCoordinatorApp: App {
         }
         .environmentObject(services.registrationViewModel)
         .environmentObject(services.postsFeedViewModel)
+        .environmentObject(services.postDetailsViewModel)
     }
 }
 

@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol ApiProvider: AnyObject {
+public protocol ApiProviderProtocol: AnyObject {
     func request<T: Decodable>(_ router: ApiRouter) async throws -> T
 }

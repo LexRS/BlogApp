@@ -8,7 +8,7 @@
 import Foundation
 import Core
 
-protocol ApiPostsProvider: AnyObject {
+protocol ApiPostsProviderProtocol: AnyObject {
     func getPosts(cursor: String?) async throws -> PostsResponse
     func getPost(id: Int) async throws -> Post
     func createPost(_ post: CreatePostRequest) async throws -> Post
@@ -16,10 +16,10 @@ protocol ApiPostsProvider: AnyObject {
     func updatePost(_ post: UpdatePostRequest) async throws -> Post
 }
 
-final class DefaultApiPostsProvider: ApiPostsProvider {
-    private let apiProvider: ApiProvider
+final class DefaultApiPostsProvider: ApiPostsProviderProtocol {
+    private let apiProvider: ApiProviderProtocol
     
-    init(apiProvider: ApiProvider) {
+    init(apiProvider: ApiProviderProtocol) {
         self.apiProvider = apiProvider
     }
     

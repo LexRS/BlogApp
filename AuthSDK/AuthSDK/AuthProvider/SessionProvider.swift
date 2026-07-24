@@ -10,6 +10,9 @@ import Combine
 
 public protocol SessionProviderProtocol: AnyObject {
     func authorize(_ request: URLRequest) async throws -> URLRequest
+    func saveSession(_ session: Session) async
+    func clearSession() async
+    func refreshToken() async -> String?
 }
 
 final class DefaultSessionProvider: SessionProviderProtocol {
@@ -28,5 +31,17 @@ final class DefaultSessionProvider: SessionProviderProtocol {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         return request
+    }
+    
+    func saveSession(_ session: Session) async {
+        await sessionKeeper.saveSession(session)
+    }
+    
+    func refreshToken() async -> String? {
+        await sessionKeeper.refreshToken
+    }
+    
+    func clearSession() async {
+        await sessionKeeper.clearSession()
     }
 }

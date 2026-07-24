@@ -11,12 +11,11 @@ import Core
 
 // MARK: - ViewModel protocol
 protocol PostDetailViewModelProtocol: ObservableObject {
-    var postID: Int { get }
     var post: Post? { get }
     var isLoading: Bool { get }
     var errorMessage: String? { get }
     
-    func fetchPostDetails()
+    func fetchPostDetails(with postID: Int)
     func dismissError()
     func onBack()
 }
@@ -24,19 +23,17 @@ protocol PostDetailViewModelProtocol: ObservableObject {
 // MARK: - ViewModel implementation
 @MainActor
 final class PostDetailViewModel: PostDetailViewModelProtocol {
-    @Published private(set) var postID: Int
     @Published private(set) var post: Post?
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorMessage: String?
     
-    private let apiPostsProvider: ApiPostsProvider
+    private let apiPostsProvider: ApiPostsProviderProtocol
     
-    init(postID: Int, apiPostsProvider: ApiPostsProvider) {
-        self.postID = postID
+    init(apiPostsProvider: ApiPostsProviderProtocol) {
         self.apiPostsProvider = apiPostsProvider
     }
     
-    func fetchPostDetails() {
+    func fetchPostDetails(with postID: Int) {
         isLoading = true
         Task {
             do {

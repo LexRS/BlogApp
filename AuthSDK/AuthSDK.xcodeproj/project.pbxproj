@@ -30,33 +30,9 @@
 		4BF87FDF3002A47B004B569C /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4BF87F112FFFDD8C004B569C /* Exceptions for "AuthSDK" folder in "AuthSDK" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Models/RegistrationRequest.swift,
-			);
-			target = 4B95DF6E2FF7E942009C88D5 /* AuthSDK */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		4BF87F122FFFDD8C004B569C /* Exceptions for "AuthSDK" folder in "Copy Bundle Resources" phase from "AuthSDK" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 4B95DF6D2FF7E942009C88D5 /* Resources */;
-			membershipExceptions = (
-				Models/RegistrationRequest.swift,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4B95DF712FF7E942009C88D5 /* AuthSDK */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4BF87F112FFFDD8C004B569C /* Exceptions for "AuthSDK" folder in "AuthSDK" target */,
-				4BF87F122FFFDD8C004B569C /* Exceptions for "AuthSDK" folder in "Copy Bundle Resources" phase from "AuthSDK" target */,
-			);
 			path = AuthSDK;
 			sourceTree = "<group>";
 		};

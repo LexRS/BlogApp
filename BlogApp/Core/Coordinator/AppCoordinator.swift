@@ -8,54 +8,62 @@
 import SwiftUI
 import Combine
 
-protocol CoordinatorNew: ObservableObject {
-    var childCoordinators: [any CoordinatorNew] { get set }
+protocol CoordinatorProtocol: ObservableObject {
+    var childCoordinators: [any CoordinatorProtocol] { get set }
+    var path: NavigationPath { get set }
     func start()
 }
 
-extension CoordinatorNew {
-    func addChild(_ coordinator: any CoordinatorNew) {
+extension CoordinatorProtocol {
+    func addChild(_ coordinator: any CoordinatorProtocol) {
         childCoordinators.append(coordinator)
     }
     
-    func removeChild(_ coordinator: any CoordinatorNew) {
+    func removeChild(_ coordinator: any CoordinatorProtocol) {
         childCoordinators.removeAll { $0 === coordinator }
     }
 }
 
-class AppCoordinator: CoordinatorNew {
-    var childCoordinators: [any CoordinatorNew] = []
+@MainActor
+class AppCoordinator: CoordinatorProtocol {
+    @Published var path = NavigationPath()
+    var childCoordinators: [any CoordinatorProtocol] = []
+    var childCoordinator: (any CoordinatorProtocol)?
     @Published var currentScreen: Screen = .registration
-    //private let window: UIWindow?
     
-    enum Screen {
+    enum Screen: Hashable {
         case registration
         case postsFeed
     }
     
-//    init(window: UIWindow? = nil) {
-//        self.window = window
-//    }
+    enum PostsFeedScreen: Hashable {
+        case postDetails(postID: Int)
+    }
     
     func start() {
-        //showLoader()
         showRegistration()
     }
     
     func showRegistration() {
-        currentScreen = .registration
-        //let loaderCoordinator = RegistrationCoordinator()
-        //loaderCoordinator.delegate = self
-        //addChild(loaderCoordinator)
-        //loaderCoordinator.start()
+        currentScreen = .postsFeed
     }
     
     func showMainFlow() {
         currentScreen = .postsFeed
-        //let mainCoordinator = MainCoordinator()
-        //mainCoordinator.delegate = self
-        //addChild(mainCoordinator)
-        //mainCoordinator.start()
+        let postsFeedCoordinator = PostsFeedCoordinator()
+        postsFeedCoordinator.delegate = self
+        addChild(postsFeedCoordinator)
+        childCoordinator = postsFeedCoordinator
+        postsFeedCoordinator.start()
+    }
+    
+    func navigateToPostDetails(_ postID: Int) {
+        path.append(PostsFeedScreen.postDetails(postID: postID))
+    }
+}
+
+extension AppCoordinator: PostsFeedCoordinatorDelegate {
+    func mainDidLogout() {
     }
 }
 

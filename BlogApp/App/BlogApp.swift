@@ -30,6 +30,7 @@ struct BlogApp: App {
         }
         .environmentObject(services.registrationViewModel)
         .environmentObject(services.postsFeedViewModel)
+        .environmentObject(services.postDetailsViewModel)
     }
 }
 

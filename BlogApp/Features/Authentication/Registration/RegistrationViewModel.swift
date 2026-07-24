@@ -42,7 +42,6 @@ class RegistrationViewModel: RegistrationViewModelProtocol {
     
     init(authProvider: AuthProviderProtocol) {
         self.authProvider = authProvider
-        print("RegistrationViewModel:", ObjectIdentifier(self))
     }
     
     let screenNames = [

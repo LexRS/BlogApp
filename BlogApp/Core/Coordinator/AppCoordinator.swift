@@ -10,6 +10,7 @@ import Combine
 
 protocol CoordinatorProtocol: ObservableObject {
     var childCoordinators: [any CoordinatorProtocol] { get set }
+    var path: NavigationPath { get set }
     func start()
 }
 
@@ -25,12 +26,18 @@ extension CoordinatorProtocol {
 
 @MainActor
 class AppCoordinator: CoordinatorProtocol {
+    @Published var path = NavigationPath()
     var childCoordinators: [any CoordinatorProtocol] = []
+    var childCoordinator: (any CoordinatorProtocol)?
     @Published var currentScreen: Screen = .registration
     
-    enum Screen {
+    enum Screen: Hashable {
         case registration
         case postsFeed
+    }
+    
+    enum PostsFeedScreen: Hashable {
+        case postDetails(postID: Int)
     }
     
     func start() {
@@ -38,15 +45,25 @@ class AppCoordinator: CoordinatorProtocol {
     }
     
     func showRegistration() {
-        currentScreen = .registration
+        currentScreen = .postsFeed
     }
     
     func showMainFlow() {
         currentScreen = .postsFeed
-        //let mainCoordinator = MainCoordinator()
-        //mainCoordinator.delegate = self
-        //addChild(mainCoordinator)
-        //mainCoordinator.start()
+        let postsFeedCoordinator = PostsFeedCoordinator()
+        postsFeedCoordinator.delegate = self
+        addChild(postsFeedCoordinator)
+        childCoordinator = postsFeedCoordinator
+        postsFeedCoordinator.start()
+    }
+    
+    func navigateToPostDetails(_ postID: Int) {
+        path.append(PostsFeedScreen.postDetails(postID: postID))
+    }
+}
+
+extension AppCoordinator: PostsFeedCoordinatorDelegate {
+    func mainDidLogout() {
     }
 }
 

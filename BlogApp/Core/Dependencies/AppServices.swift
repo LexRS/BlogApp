@@ -22,6 +22,7 @@ struct AppServices {
     // MARK: - View Models
     let registrationViewModel: RegistrationViewModel
     let postsFeedViewModel: PostsFeedViewModel
+    let postDetailsViewModel: PostDetailViewModel
     
     init() {
         self.config = DefaultConfig()
@@ -31,5 +32,6 @@ struct AppServices {
         self.apiPostsProvider = DefaultApiPostsProvider(apiProvider: apiProvider)
         self.registrationViewModel = RegistrationViewModel(authProvider: authProvider)
         self.postsFeedViewModel = PostsFeedViewModel(apiPostsProvider: apiPostsProvider)
+        self.postDetailsViewModel = PostDetailViewModel(apiPostsProvider: apiPostsProvider)
     }
 }

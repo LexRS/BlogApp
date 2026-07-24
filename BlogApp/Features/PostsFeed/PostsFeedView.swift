@@ -12,7 +12,7 @@ struct PostsFeedView: View {
     @EnvironmentObject var coordinator: AppCoordinator
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $coordinator.path) {
             ZStack(alignment: .bottomTrailing) {
                 if viewModel.posts.isEmpty {
                     NodataView()
@@ -61,6 +61,12 @@ struct PostsFeedView: View {
                     postsSection()
                     loadingMoreSection()
                 }
+                .navigationDestination(for: AppCoordinator.PostsFeedScreen.self) { screen in
+                    switch screen {
+                    case .postDetails(let postID):
+                        PostDetailView(id: postID)
+                    }
+                }
                 .listStyle(.plain)
                 .refreshable {
                     viewModel.onRefresh()
@@ -72,15 +78,16 @@ struct PostsFeedView: View {
     @ViewBuilder
     private func postsSection() -> some View {
         ForEach(viewModel.posts) { post in
-            PostRow(post: post)
-                .onTapGesture {
-                    //coordinator.navigate(to: AppRoute.postDetail(post))
+            Button(action: {
+                coordinator.navigateToPostDetails(post.id)
+            }, label: {
+                PostRow(post: post)
+            })
+            .onAppear {
+                if post.id == viewModel.posts.last?.id && viewModel.hasMore {
+                    viewModel.loadMorePosts()
                 }
-                .onAppear {
-                    if post.id == viewModel.posts.last?.id && viewModel.hasMore {
-                        viewModel.loadMorePosts()
-                    }
-                }
+            }
         }
     }
     

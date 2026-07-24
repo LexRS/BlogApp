@@ -6,12 +6,15 @@
 //
 
 import Combine
+import SwiftUI
 
 protocol RegistrationCoordinatorDelegate: AnyObject {
     func registrationDidFinishSuccess()
 }
 
 class RegistrationCoordinator: CoordinatorProtocol, ObservableObject {
+    var path: NavigationPath = NavigationPath()
+    
     func start() {
     }
     

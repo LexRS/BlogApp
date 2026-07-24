@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct PostDetailView: View {
-    @StateObject private var viewModel: PostDetailViewModel
-    @ObservedObject var coordinator: AppCoordinator
+    @EnvironmentObject var viewModel: PostDetailViewModel
+    @EnvironmentObject var coordinator: AppCoordinator
+    private var id: Int
     
-    init(coordinator: AppCoordinator, viewModel: PostDetailViewModel) {
-        self.coordinator = coordinator
-        _viewModel = StateObject(wrappedValue: viewModel)
+    init(id: Int) {
+        self.id = id
     }
     
     var body: some View {
@@ -54,7 +54,7 @@ struct PostDetailView: View {
             Text(viewModel.errorMessage ?? "")
         }
         .onAppear {
-            viewModel.fetchPostDetails()
+            viewModel.fetchPostDetails(with: id)
         }
     }
 }

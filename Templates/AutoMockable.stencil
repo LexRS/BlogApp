@@ -1,0 +1,37 @@
+{% for protocol in types.protocols|annotated:"AutoMockable" %}
+// MARK: - {{ protocol.name }}Mock
+public final class {{ protocol.name }}Mock: {{ protocol.name }} {
+    public init() {}
+
+    {% for method in protocol.allMethods %}
+    // MARK: - {{ method.name }}
+    public var {{ method.shortName }}Called = false
+    public var {{ method.shortName }}CallsCount = 0
+    {% if method.parameters.count > 0 %}
+    public var {{ method.shortName }}ReceivedArguments: ({% for param in method.parameters %}{{ param.typeName }}{% if not forloop.last %}, {% endif %}{% endfor %})?
+    {% endif %}
+    {% if method.isThrows %}
+    public var {{ method.shortName }}ThrowableError: Error?
+    {% endif %}
+    {% if method.returnTypeName and method.returnTypeName.name != "Void" %}
+    public var {{ method.shortName }}ReturnValue: {{ method.returnTypeName.name }}!
+    {% endif %}
+
+    public func {{ method.name }}{% if method.isAsync %} async{% endif %}{% if method.isThrows %} throws{% endif %}{% if method.returnTypeName and method.returnTypeName.name != "Void" %} -> {{ method.returnTypeName.name }}{% endif %} {
+        {{ method.shortName }}Called = true
+        {{ method.shortName }}CallsCount += 1
+        {% if method.parameters.count > 0 %}
+        {{ method.shortName }}ReceivedArguments = ({% for param in method.parameters %}{{ param.name }}{% if not forloop.last %}, {% endif %}{% endfor %})
+        {% endif %}
+        {% if method.isThrows %}
+        if let error = {{ method.shortName }}ThrowableError {
+            throw error
+        }
+        {% endif %}
+        {% if method.returnTypeName and method.returnTypeName.name != "Void" %}
+        return {{ method.shortName }}ReturnValue
+        {% endif %}
+    }
+    {% endfor %}
+}
+{% endfor %}

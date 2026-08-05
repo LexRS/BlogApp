@@ -8,6 +8,7 @@
 import Foundation
 import Core
 
+// sourcery: AutoMockable
 public protocol AuthProviderProtocol {
     func register(_ registrationRequest: RegistrationRequest) async throws -> AuthResponse
     func login(_ loginRequest: LoginRequest) async throws -> AuthResponse

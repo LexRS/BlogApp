@@ -101,6 +101,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BF4CC082F3247AD00D2F26B /* Build configuration list for PBXNativeTarget "BlogApp" */;
 			buildPhases = (
+				4BD4046B302334F0008B043D /* ShellScript */,
 				4BF4CBF92F3247AB00D2F26B /* Sources */,
 				4BF4CBFA2F3247AB00D2F26B /* Frameworks */,
 				4BF4CBFB2F3247AB00D2F26B /* Resources */,
@@ -166,6 +167,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4BD4046B302334F0008B043D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin:/usr/local/bin\"\n\nif which sourcery >/dev/null; then\n    sourcery\nelse\n    echo \"warning: Sourcery not installed\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4BF4CBF92F3247AB00D2F26B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -215,7 +237,7 @@
 				DEVELOPMENT_TEAM = 9ZFC28246W;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -279,7 +301,7 @@
 				DEVELOPMENT_TEAM = 9ZFC28246W;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

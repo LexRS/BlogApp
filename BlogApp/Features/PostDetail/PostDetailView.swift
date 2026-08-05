@@ -23,7 +23,6 @@ struct PostDetailView: View {
                 if let post = viewModel.post {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            
                             Text(post.author)
                                 .font(.headline)
                             Spacer()

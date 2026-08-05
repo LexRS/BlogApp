@@ -1,0 +1,8 @@
+sources:
+  - ./AuthSDK
+  - ./BlogApp
+  - ./Core
+templates:
+  - ./Templates
+output:
+  path: ./Sourcery/Generated

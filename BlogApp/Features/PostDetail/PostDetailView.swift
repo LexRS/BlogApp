@@ -10,6 +10,8 @@ import SwiftUI
 struct PostDetailView: View {
     @EnvironmentObject var viewModel: PostDetailViewModel
     @EnvironmentObject var coordinator: AppCoordinator
+    @Environment(\.dismiss) var dismiss
+    
     private var id: Int
     
     init(id: Int) {
@@ -47,7 +49,7 @@ struct PostDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
             Button("OK") {
-                
+                dismiss() 
             }
         } message: {
             Text(viewModel.errorMessage ?? "")

@@ -15,8 +15,13 @@ public protocol SessionProviderProtocol: AnyObject {
     func refreshToken() async -> String?
 }
 
+public enum AuthEvent {
+    case sessionExpired
+}
+
 final class DefaultSessionProvider: SessionProviderProtocol {
     private let sessionKeeper: SessionKeeperProtocol
+    let sessionEvents = PassthroughSubject<AuthEvent, Never>()
 
     init(sessionKeeper: SessionKeeperProtocol) {
         self.sessionKeeper = sessionKeeper
@@ -43,5 +48,23 @@ final class DefaultSessionProvider: SessionProviderProtocol {
     
     func clearSession() async {
         await sessionKeeper.clearSession()
+        sessionEvents.send(.sessionExpired)
+    }
+}
+
+extension DefaultSessionProvider: SessionObserving {
+    var isAuthenticatedPublisher: AnyPublisher<Bool, Never> {
+        Deferred { [weak self] in
+            Future { promise in
+                Task {
+                    if let result = await self?.sessionKeeper.accessToken {
+                        promise(.success(true))
+                    } else {
+                        promise(.success(false))
+                    }
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 }

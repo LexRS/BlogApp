@@ -14,15 +14,18 @@ import Combine
 struct AppServices {
     // MARK: - Services
     private let config: ConfigProtocol
-    private let sessionProvider: SessionProviderProtocol
     private let apiProvider: ApiProviderProtocol
     private let authProvider: AuthProviderProtocol
     private let apiPostsProvider: ApiPostsProviderProtocol
+    
+    // MARK: - Public services
+    let sessionProvider: SessionProviderProtocol & SessionObserving
     
     // MARK: - View Models
     let registrationViewModel: RegistrationViewModel
     let postsFeedViewModel: PostsFeedViewModel
     let postDetailsViewModel: PostDetailViewModel
+    let addPostViewModel: AddPostViewModel
     
     init() {
         self.config = DefaultConfig()
@@ -33,5 +36,6 @@ struct AppServices {
         self.registrationViewModel = RegistrationViewModel(authProvider: authProvider)
         self.postsFeedViewModel = PostsFeedViewModel(apiPostsProvider: apiPostsProvider)
         self.postDetailsViewModel = PostDetailViewModel(apiPostsProvider: apiPostsProvider)
+        self.addPostViewModel = AddPostViewModel(apiPostProvider: apiPostsProvider)
     }
 }

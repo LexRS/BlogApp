@@ -28,15 +28,3 @@ class PostsFeedCoordinator: CoordinatorProtocol, ObservableObject {
         currentTab = .dashboard
     }
 }
-
-//final class PostsFeedCoordinator: ObservableObject {
-//    @Published var path = NavigationPath()
-//
-//    func start() {
-//        path.removeLast(path.count)
-//    }
-//
-//    func showPostDetails(postID: Int) {
-//        path.append(Route.postDetails(postID))
-//    }
-//}

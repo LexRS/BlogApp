@@ -46,6 +46,11 @@ struct PostsFeedView: View {
                 }
             }
         }
+        .sheet(item: $coordinator.modalScreen) { screen in
+            if case .addPost = screen {
+                AddPostView()
+            }
+        }
     }
     
     // MARK: - Subviews
@@ -105,7 +110,7 @@ struct PostsFeedView: View {
     
     private var floatingButton: some View {
         Button {
-            viewModel.didTapAddButton()
+            coordinator.showAddPostModal()
         } label: {
             Image(systemName: "plus")
                 .font(.title2)

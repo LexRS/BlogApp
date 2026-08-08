@@ -46,7 +46,7 @@ struct RegistrationView: View {
             }
         }
         .onChange(of: viewModel.isAuthorized) { _, isAuthorized in
-            if isAuthorized { // 👈 Проверяем новое пришедшее значение
+            if isAuthorized {
                 coordinator.showMainFlow()
             }
         }

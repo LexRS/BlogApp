@@ -10,7 +10,7 @@ import Combine
 
 public class AuthAssembly {
     // The public interface - only this should be visible to the app
-    public static func buildSessionProvider() -> SessionProviderProtocol {
+    public static func buildSessionProvider() -> SessionProviderProtocol & SessionObserving {
         // Internal assembly - App doesn't need to know these details
         let sessionKeeper = DefaultSessionKeeper()
         return DefaultSessionProvider(sessionKeeper: sessionKeeper)

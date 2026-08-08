@@ -9,8 +9,14 @@ import SwiftUI
 
 @main
 struct BlogApp: App {
-    @StateObject private var appCoordinator = AppCoordinator()
-    let services = AppServices()
+    let services: AppServices
+    @StateObject private var appCoordinator: AppCoordinator
+
+    init() {
+        let services = AppServices()
+        self.services = services
+        _appCoordinator = StateObject(wrappedValue: AppCoordinator(sessionObserver: services.sessionProvider))
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -31,6 +37,7 @@ struct BlogApp: App {
         .environmentObject(services.registrationViewModel)
         .environmentObject(services.postsFeedViewModel)
         .environmentObject(services.postDetailsViewModel)
+        .environmentObject(services.addPostViewModel)
     }
 }
 

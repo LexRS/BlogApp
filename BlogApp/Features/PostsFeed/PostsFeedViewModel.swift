@@ -20,8 +20,6 @@ protocol PostsFeedViewModelProtocol: ObservableObject {
     var selectedPost: Post? { get set }
     
     func onAppear()
-    func didSelectPost(_ post: Post)
-    func didTapAddButton()
     func onRefresh()
     func loadMorePosts()
     func dismissError()
@@ -48,18 +46,6 @@ final class PostsFeedViewModel: PostsFeedViewModelProtocol {
         if posts.isEmpty {
             fetchPosts()
         }
-    }
-    
-    func didSelectPost(_ post: Post) {
-//        coordinator?.showDetailPost(post: post)
-    }
-    
-    func didTapAddButton() {
-//        coordinator.showCreatePost { [weak self] newPost in
-//            if let newPost = newPost {
-//                self?.posts.insert(newPost, at: 0)
-//            }
-//        }
     }
     
     func onRefresh() {

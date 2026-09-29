@@ -16,7 +16,7 @@ struct AddPostView: View {
     
     var body: some View {
         Form {
-            Section(header: Text("Post details")) {
+            Section(header: Text("New post")) {
                 TextField("Enter title", text: $viewModel.title)
                     .textInputAutocapitalization(.words)
                     .autocorrectionDisabled()

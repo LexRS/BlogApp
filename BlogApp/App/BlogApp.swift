@@ -34,6 +34,7 @@ struct BlogApp: App {
                 appCoordinator.start()
             }
         }
+        .environmentObject(appCoordinator)
         .environment(\.viewModelFactory, viewModelFactory)
     }
 }

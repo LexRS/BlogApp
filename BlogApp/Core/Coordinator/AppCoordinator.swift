@@ -31,7 +31,6 @@ class AppCoordinator: CoordinatorProtocol {
     var childCoordinators: [any CoordinatorProtocol] = []
     var childCoordinator: (any CoordinatorProtocol)?
     @Published var currentScreen: Screen = .registration
-    @Published var modalScreen: ModalScreen? = nil
     
     private let sessionObserver: SessionObserving
     private var cancellables = Set<AnyCancellable>()
@@ -45,58 +44,30 @@ class AppCoordinator: CoordinatorProtocol {
         case postsFeed
     }
     
-    enum PostsFeedScreen: Hashable {
-        case postDetails(postID: Int)
-    }
-    
     func start() {
+        showRegistration()
         sessionObserver.isAuthenticatedPublisher.receive(on: DispatchQueue.main)
             .sink { [weak self] isAuthenticated in
                 self?.currentScreen = isAuthenticated ? .postsFeed : .registration
             }
             .store(in: &cancellables)
-        showRegistration()
     }
     
     func showRegistration() {
-        currentScreen = .postsFeed
+        currentScreen = .registration
     }
     
     func showMainFlow() {
         currentScreen = .postsFeed
-        let postsFeedCoordinator = PostsFeedCoordinator()
-        postsFeedCoordinator.delegate = self
-        addChild(postsFeedCoordinator)
-        childCoordinator = postsFeedCoordinator
-        postsFeedCoordinator.start()
-    }
-    
-    func navigateToPostDetails(_ postID: Int) {
-        path.append(PostsFeedScreen.postDetails(postID: postID))
-    }
-    
-    func showAddPostModal() {
-        modalScreen = .addPost
-    }
-    
-    func dismissModal() {
-        modalScreen = nil
+//        let postsFeedCoordinator = PostsFeedCoordinator()
+//        postsFeedCoordinator.delegate = self
+//        addChild(postsFeedCoordinator)
+//        childCoordinator = postsFeedCoordinator
+//        postsFeedCoordinator.start()
     }
 }
 
 extension AppCoordinator: PostsFeedCoordinatorDelegate {
     func mainDidLogout() {
-    }
-}
-
-extension AppCoordinator {
-    enum ModalScreen: Identifiable, Hashable {
-        case addPost
-        // case editPost(Post) // Example for later
-        
-        var id: String {
-            // Conforming to Identifiable so we can use .sheet(item:)
-            String(describing: self)
-        }
     }
 }

@@ -26,18 +26,36 @@ final class AddPostViewModel: AddPostViewModelProtocol {
     @State var title: String = ""
     @State var bodyText: String = ""
     
-    private let apiPostProvider: ApiPostsProviderProtocol
+    private let apiPostsProvider: ApiPostsProviderProtocol
     
-    init(apiPostProvider: ApiPostsProviderProtocol) {
-        self.apiPostProvider = apiPostProvider
+    init(apiPostsProvider: ApiPostsProviderProtocol) {
+        self.apiPostsProvider = apiPostsProvider
     }
     
     func uploadPost() {
+        let createPostRequest = CreatePostRequest(title: title, content: bodyText, author: "It's me")
+        isLoading = true
+        Task {
+            do {
+                let response = try await apiPostsProvider.createPost(createPostRequest)
+                handleSuccess(response)
+            } catch {
+                handleFailure(error)
+            }
+        }
     }
     
     func dismissError() {
     }
     
     func onBack() {
+    }
+    
+    private func handleSuccess(_ postResponse: Post) {
+        
+    }
+    
+    private func handleFailure(_ error: Error) {
+        
     }
 }

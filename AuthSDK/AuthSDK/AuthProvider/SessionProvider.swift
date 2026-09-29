@@ -57,7 +57,7 @@ extension DefaultSessionProvider: SessionObserving {
         Deferred { [weak self] in
             Future { promise in
                 Task {
-                    if let result = await self?.sessionKeeper.accessToken {
+                    if let _ = await self?.sessionKeeper.accessToken {
                         promise(.success(true))
                     } else {
                         promise(.success(false))

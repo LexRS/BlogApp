@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct AddPostView: View {
-    @EnvironmentObject var viewModel: AddPostViewModel
+    @StateObject var viewModel: AddPostViewModel
+    
+    init(viewModel: AddPostViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         Form {

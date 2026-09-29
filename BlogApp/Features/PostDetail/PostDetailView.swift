@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct PostDetailView: View {
-    @EnvironmentObject var viewModel: PostDetailViewModel
+    @StateObject var viewModel: PostDetailViewModel
     @EnvironmentObject var coordinator: AppCoordinator
     @Environment(\.dismiss) var dismiss
     
     private var id: Int
     
-    init(id: Int) {
+    init(viewModel: PostDetailViewModel, id: Int) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
         self.id = id
     }
     

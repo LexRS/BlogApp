@@ -9,11 +9,15 @@ import SwiftUI
 import AuthSDK
 
 struct RegistrationView: View {
-    @EnvironmentObject private var viewModel: RegistrationViewModel
+    @StateObject private var viewModel: RegistrationViewModel
     @EnvironmentObject private var coordinator: AppCoordinator
     
     @State private var currentIndex = 0
     @State private var animateMove = false
+    
+    init(viewModel: RegistrationViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         VStack {
@@ -108,5 +112,6 @@ struct CardView: View {
 
 
 #Preview {
-    RegistrationView()
+    let mockViewModel = RegistrationViewModel(authProvider: AuthServiceMock())
+    RegistrationView(viewModel: mockViewModel)
 }

@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct PostsFeedView: View {
-    @EnvironmentObject private var viewModel: PostsFeedViewModel
-    @EnvironmentObject var coordinator: AppCoordinator
+    @StateObject private var viewModel: PostsFeedViewModel
+    @StateObject private var postsCoordinator = PostsFeedCoordinator()
+    @Environment(\.viewModelFactory) var factory
     
+    init(viewModel: PostsFeedViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
+        
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
+        NavigationStack(path: $postsCoordinator.path) {
             ZStack(alignment: .bottomTrailing) {
                 if viewModel.posts.isEmpty {
                     NodataView()
@@ -46,9 +51,9 @@ struct PostsFeedView: View {
                 }
             }
         }
-        .sheet(item: $coordinator.modalScreen) { screen in
+        .sheet(item: $postsCoordinator.modalScreen) { screen in
             if case .addPost = screen {
-                AddPostView()
+                AddPostView(viewModel: factory.makeAddPostViewModel())
             }
         }
     }
@@ -66,10 +71,10 @@ struct PostsFeedView: View {
                     postsSection()
                     loadingMoreSection()
                 }
-                .navigationDestination(for: AppCoordinator.PostsFeedScreen.self) { screen in
+                .navigationDestination(for: PostsFeedCoordinator.PostsFeedScreen.self) { screen in
                     switch screen {
                     case .postDetails(let postID):
-                        PostDetailView(id: postID)
+                        PostDetailView(viewModel: factory.makePostDetailViewModel(), id: postID)
                     }
                 }
                 .listStyle(.plain)
@@ -84,7 +89,7 @@ struct PostsFeedView: View {
     private func postsSection() -> some View {
         ForEach(viewModel.posts) { post in
             Button(action: {
-                coordinator.navigateToPostDetails(post.id)
+                postsCoordinator.navigateToPostDetails(post.id)
             }, label: {
                 PostRow(post: post)
             })
@@ -110,7 +115,7 @@ struct PostsFeedView: View {
     
     private var floatingButton: some View {
         Button {
-            coordinator.showAddPostModal()
+            postsCoordinator.showAddPostModal()
         } label: {
             Image(systemName: "plus")
                 .font(.title2)
